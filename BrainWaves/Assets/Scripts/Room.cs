@@ -59,11 +59,13 @@ public class Room : MonoBehaviour
 				TileBase tile = null;
 				Debug.Assert (tileLocator.tile != null, "no tile in locator: " + coord);
 				foreach (Transform child in tileLocator.tile.transform) {
-					return child.gameObject.GetComponentInChildren<TileBase> () as TileBase;
+					TileBase returnValue = child.gameObject.GetComponentInChildren<TileBase> () as TileBase;
+					if (returnValue != null)
+						return returnValue;
 				}
 			}
 		}
-		//Debug.Log ("Returning Null for coord: " + coord);
+		Debug.Log ("Returning Null for coord: " + coord);
 		return null;
 	}
 
