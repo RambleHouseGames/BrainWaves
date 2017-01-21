@@ -7,4 +7,4 @@ public abstract class TileBase : MonoBehaviour
 	public abstract TileType GetTileType();
 }
 
-public enum TileType {EMPTY, WALL, BUTTON, LEVER}
+public enum TileType {EMPTY, WALL, BUTTON, LEVER, DOOR, DEATH}
