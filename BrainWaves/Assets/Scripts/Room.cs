@@ -62,7 +62,7 @@ public class Room : MonoBehaviour
 				}
 			}
 		}
-		Debug.Log ("Returning Null for coord: " + coord);
+		Debug.Log ("" + gameObject.name + "Returning Null for coord: " + coord);
 		return null;
 	}
 
