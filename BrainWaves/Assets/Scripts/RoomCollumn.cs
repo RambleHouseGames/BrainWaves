@@ -19,6 +19,9 @@ public class RoomCollumn : MonoBehaviour {
 	[SerializeField]
 	private float minSpeed = 10f;
 
+	[SerializeField]
+	public Character character;
+
 	void Update()
 	{
 		Vector3 target = new Vector3(transform.position.x, -(heightPerRoom * gameData.GetCurrentProgress()), transform.position.z);

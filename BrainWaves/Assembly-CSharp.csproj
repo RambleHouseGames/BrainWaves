@@ -47,9 +47,11 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\ButtonTile.cs" />
+     <Compile Include="Assets\Scripts\Character.cs" />
      <Compile Include="Assets\Scripts\DeathTile.cs" />
      <Compile Include="Assets\Scripts\DoorTile.cs" />
      <Compile Include="Assets\Scripts\EmptyTile.cs" />
+     <Compile Include="Assets\Scripts\FlipCharacter.cs" />
      <Compile Include="Assets\Scripts\GameData.cs" />
      <Compile Include="Assets\Scripts\LeverTile.cs" />
      <Compile Include="Assets\Scripts\MainCharacter.cs" />

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameData : MonoBehaviour 
 {
+	public static GameData Instance { get; private set; }
+
 	[SerializeField]
 	private List<RoomType> roomOrder = new List<RoomType> {RoomType.MAIN, RoomType.FLIP, RoomType.LAZY, RoomType.CRAZY};
 
@@ -12,6 +14,16 @@ public class GameData : MonoBehaviour
 
 	[SerializeField]
 	private int progress = 0;
+
+	[Header("Collumns")]
+	public RoomCollumn mainCol;
+	public RoomCollumn flipCol;
+	public RoomCollumn lazyCol;
+	public RoomCollumn crazyCol;
+
+	void Awake() {
+		Instance = this;
+	}
 
 	public GameState GetCurrentGameState()
 	{
@@ -42,6 +54,30 @@ public class GameData : MonoBehaviour
 		roomOrder.Insert (destination, type);
 	}
 
+	public RoomCollumn GetRoomCollumn(RoomType roomType) {
+		switch (roomType) {
+			case RoomType.MAIN:
+				return mainCol;
+			case RoomType.FLIP:
+				return flipCol;
+			case RoomType.LAZY:
+				return lazyCol;
+			case RoomType.CRAZY:
+				return crazyCol;
+			default:
+				throw new System.ArgumentOutOfRangeException ();
+		}
+	}
+
+	public RoomCollumn GetNextRoomCollumn(RoomType myRoomType) {
+		int myI = roomOrder.IndexOf (myRoomType);
+		Debug.Log (myI);
+		if (myI == 3)
+			return null;
+		else
+			return GetRoomCollumn(roomOrder [myI + 1]);
+	}
+
 	public void NotifyProgressAnimationComplete(RoomType room)
 	{
 		if(currentGameState == GameState.ADVANCING)
@@ -51,3 +87,4 @@ public class GameData : MonoBehaviour
 
 public enum RoomType {MAIN, FLIP, LAZY, CRAZY}
 public enum GameState {PLAYING, ADVANCING, CUT_SCENE}
+public enum Move {NONE, UP, DOWN, LEFT, RIGHT}
