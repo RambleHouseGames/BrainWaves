@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2008
+
+Project("{897D31C2-120E-3396-A0DB-96C18E418EF3}") = "BrainWaves", "Assembly-CSharp.csproj", "{520F9120-8DEF-2738-1B87-B0DA8640D129}"
+EndProject
+Project("{897D31C2-120E-3396-A0DB-96C18E418EF3}") = "BrainWaves", "Assembly-CSharp-Editor.csproj", "{83F08443-1468-E52F-B050-77DE58559062}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{520F9120-8DEF-2738-1B87-B0DA8640D129}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{520F9120-8DEF-2738-1B87-B0DA8640D129}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{520F9120-8DEF-2738-1B87-B0DA8640D129}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{520F9120-8DEF-2738-1B87-B0DA8640D129}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83F08443-1468-E52F-B050-77DE58559062}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83F08443-1468-E52F-B050-77DE58559062}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83F08443-1468-E52F-B050-77DE58559062}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83F08443-1468-E52F-B050-77DE58559062}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal
