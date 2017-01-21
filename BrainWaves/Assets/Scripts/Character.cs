@@ -58,6 +58,9 @@ public abstract class Character : MonoBehaviour {
 		Move myMove = InterpretMove (yourMove);
 		SendMove (myMove);
 
+		if (myMove == Move.NONE)
+			return;
+
 		Vector2 destination = GetDestination (myMove);
 		TileBase destinationTile = myCollumn.GetCurrentRoom().GetTile(destination);
 		if (destinationTile != null && destinationTile.GetTileType () == TileType.EMPTY) {
