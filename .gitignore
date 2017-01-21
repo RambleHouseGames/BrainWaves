@@ -1,4 +1,35 @@
-BrainWaves/Assets/Art.meta
-BrainWaves/Library/metadata/75/75348eda804714ac6b6b5b680ac561fc
-BrainWaves/Library/metadata/75/75348eda804714ac6b6b5b680ac561fc.info
-BrainWaves/Library/metadata/86/86cfc0cbd23f347489e33237b965399a.info
+# =============== #
+# Unity generated #
+# =============== #
+[Tt]emp/
+[Oo]bj/
+[Bb]uild
+/[Ll]ibrary/
+sysinfo.txt
+*.stackdump
+ 
+# ============================================= #
+# Visual Studio / MonoDevelop / Rider generated #
+# ============================================= #
+[Ee]xported[Oo]bj/
+.vs/
+/*.userprefs
+/*.csproj
+/*.pidb
+/*.suo
+/*.sln*
+/*.user
+/*.unityproj
+/*.booproj
+/.idea*/
+ 
+# ============ #
+# OS generated #
+# ============ #
+.DS_Store*
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+[Tt]humbs.db
+[Dd]esktop.ini
