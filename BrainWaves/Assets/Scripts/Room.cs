@@ -15,9 +15,6 @@ public class Room : MonoBehaviour
 	[SerializeField]
 	private List<RoomTile> tileLocators;
 
-	[SerializeField]
-	private List<TilePrefab> tilePrefabs;
-
 	void Awake()
 	{
 		if (import == false)
@@ -71,7 +68,7 @@ public class Room : MonoBehaviour
 
 	private GameObject GetTilePrefab(int CSVCode)
 	{
-		foreach (TilePrefab tilePrefab in tilePrefabs) {
+		foreach (TilePrefab tilePrefab in GameData.Instance.tilePrefabs) {
 			if (tilePrefab.CSVCode == CSVCode)
 				return tilePrefab.prefab;
 		}
@@ -89,6 +86,12 @@ public class Room : MonoBehaviour
 		}
 		GameObject newGO = GameObject.Instantiate (GetTilePrefab(value), locator.transform.position, Quaternion.identity, locator);
 		newGO.transform.localScale = Vector3.one;
+
+		if (value == 5) {
+			// Rock
+			var rock = GameObject.Instantiate (GameData.Instance.rockPrefab, locator.transform.position, Quaternion.identity, locator);
+			rock.transform.localScale = Vector3.one;
+		}
 	}
 }
 
@@ -97,11 +100,4 @@ public class RoomTile
 {
 	public Vector2 coord;
 	public GameObject tile;
-}
-
-[Serializable]
-public class TilePrefab
-{
-	public int CSVCode;
-	public GameObject prefab;
 }

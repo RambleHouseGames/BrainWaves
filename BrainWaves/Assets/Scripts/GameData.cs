@@ -27,6 +27,10 @@ public class GameData : MonoBehaviour
 	public RoomCollumn lazyCol;
 	public RoomCollumn crazyCol;
 
+	[Header("Prefabs")]
+	public List<TilePrefab> tilePrefabs;
+	public GameObject rockPrefab;
+
 	void Awake() {
 		Instance = this;
 	}
@@ -124,4 +128,11 @@ public class PuzzleRequirement
 {
 	public int progressNumber;
 	public List<RoomType> rooms;
+}
+
+[Serializable]
+public class TilePrefab
+{
+	public int CSVCode;
+	public GameObject prefab;
 }
