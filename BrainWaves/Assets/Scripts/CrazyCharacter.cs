@@ -10,6 +10,11 @@ public class CrazyCharacter : Character {
 
 	}
 
+	void Start()
+	{
+		GameData.Instance.AddProgressCallback (onProgressChanged);
+	}
+
 	public override RoomType GetRoomType ()
 	{
 		return RoomType.CRAZY;
@@ -39,5 +44,14 @@ public class CrazyCharacter : Character {
 			throw new System.ArgumentOutOfRangeException ();
 		}
 		return dest;
+	}
+
+	private void onProgressChanged()
+	{
+		Room newRoom = myCollumn.GetCurrentRoom ();
+		TileBase tile = newRoom.GetTile (new Vector2(4, 0));
+		transform.position = tile.transform.position;
+		transform.SetParent (tile.transform);
+		coord = new Vector2 (4, 0);
 	}
 }
