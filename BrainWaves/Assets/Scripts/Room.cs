@@ -31,14 +31,19 @@ public class Room : MonoBehaviour
 			string value = "";
 			while (i < csv.Length) {
 				if (csv [i] == ',') {
-					if(value.Length > 0)
+					if (value.Length > 0) {
+						Debug.Log ("" + value + " to: " + new Vector2(x, y));
 						InstantiateTileForCSVValue (int.Parse (value), new Vector2 (x, y));
+					}
 					x++;
 					value = "";
 				}
 				else if (csv [i] == '\n') {
-					if(value.Length > 0)
+					Debug.Log ("NewLine");
+					if (value.Length > 0) {
+						Debug.Log ("" + value + " to: " + new Vector2(x, y));
 						InstantiateTileForCSVValue (int.Parse (value), new Vector2 (x, y));
+					}
 					y--;
 					x = 0;
 					value = "";
