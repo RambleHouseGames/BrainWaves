@@ -4,8 +4,17 @@ using UnityEngine;
 
 public class DoorTile : TileBase
 {
+	private bool open = false;
+
 	public override TileType GetTileType ()
 	{
-		return TileType.DOOR;
+		if (open)
+			return TileType.EMPTY;
+		else
+			return TileType.DOOR;
+	}
+
+	public void Toggle() {
+		open = !open;
 	}
 }

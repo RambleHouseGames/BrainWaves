@@ -68,14 +68,17 @@ public abstract class Character : MonoBehaviour {
 		
 		TileType tileType = destinationTile.GetTileType ();
 
-		if (tileType != TileType.EMPTY)
-			Debug.Log (tileType);
-
 		// Blocking tiles.
 		if (tileType == TileType.WALL
-			|| tileType == TileType.LEVER
 			|| tileType == TileType.DOOR)
 			return;
+
+		// Special blocking tile.
+		if (tileType == TileType.LEVER) {
+			Debug.Log ("Trigger Lever");
+			(destinationTile as LeverTile).Trigger ();
+			return;
+		}
 
 		// if tile contains boulder
 		// -if can push it
@@ -92,8 +95,18 @@ public abstract class Character : MonoBehaviour {
 			// TODO: trigger button
 		} else if (tileType == TileType.DEATH) {
 			// TODO: trigger death
-		} else {
-			// if any *adjacent* tile is a lever, trigger lever
 		}
+	}
+
+	// Returns all non-null tiles adjacent to the given position.
+	public List<TileBase> GetAdjacent(Vector2 position) {
+		var result = new List<TileBase> () {
+			myCollumn.GetCurrentRoom ().GetTile (position + Vector2.up),
+			myCollumn.GetCurrentRoom ().GetTile (position + Vector2.right),
+			myCollumn.GetCurrentRoom ().GetTile (position + Vector2.left),
+			myCollumn.GetCurrentRoom ().GetTile (position + Vector2.down)
+		};
+		result.RemoveAll(t => t == null);
+		return result;
 	}
 }
