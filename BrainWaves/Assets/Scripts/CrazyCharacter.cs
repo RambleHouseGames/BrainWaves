@@ -7,6 +7,7 @@ public class CrazyCharacter : Character {
 	void Awake()
 	{
 		InitPosition ();
+
 	}
 
 	public override RoomType GetRoomType ()

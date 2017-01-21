@@ -19,6 +19,8 @@ public class GameData : MonoBehaviour
 	[SerializeField]
 	private List<PuzzleRequirement> puzzleRequirements;
 
+	private Action progressCallback;
+
 	private List<RoomType> victoryReports;
 
 	[Header("Collumns")]
@@ -29,6 +31,19 @@ public class GameData : MonoBehaviour
 
 	void Awake() {
 		Instance = this;
+	}
+
+	public void AddProgressCallback(Action callback)
+	{
+		if (progressCallback == null)
+			progressCallback = callback;
+		else
+			progressCallback += callback;
+	}
+
+	public void RemoveProgressCallback(Action callback)
+	{
+		progressCallback -= callback;
 	}
 
 	public GameState GetCurrentGameState()
@@ -102,6 +117,8 @@ public class GameData : MonoBehaviour
 				return;
 		}
 		progress++;
+		if (progressCallback != null)
+			progressCallback ();
 	}
 
 	private PuzzleRequirement getRequirement(int progressNumber)

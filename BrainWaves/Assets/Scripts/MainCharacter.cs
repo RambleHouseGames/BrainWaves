@@ -10,6 +10,11 @@ public class MainCharacter : Character
 		InitPosition ();
 	}
 
+	void Start()
+	{
+		GameData.Instance.AddProgressCallback (onProgressChanged);
+	}
+
 	public override RoomType GetRoomType ()
 	{
 		return RoomType.MAIN;
@@ -30,5 +35,14 @@ public class MainCharacter : Character
 		} else if (Input.GetKeyDown (KeyCode.RightArrow)) {
 			TryMove (Move.RIGHT);
 		}
+	}
+
+	private void onProgressChanged()
+	{
+		Room newRoom = myCollumn.GetCurrentRoom ();
+		TileBase tile = newRoom.GetTile (new Vector2(4, 0));
+		transform.position = tile.transform.position;
+		transform.SetParent (tile.transform);
+		coord = new Vector2 (4, 0);
 	}
 }
