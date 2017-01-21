@@ -18,16 +18,12 @@ public class MainCharacter : Character
 	{
 		if (Input.GetKeyDown (KeyCode.UpArrow)) {
 			TryMove (Move.UP);
-			Debug.Log ("UP");
 		} else if (Input.GetKeyDown (KeyCode.DownArrow)) {
 			TryMove (Move.DOWN);
-			Debug.Log ("Down");
 		} else if (Input.GetKeyDown (KeyCode.LeftArrow)) {
 			TryMove (Move.LEFT);
-			Debug.Log ("Left");
 		} else if (Input.GetKeyDown (KeyCode.RightArrow)) {
 			TryMove (Move.RIGHT);
-			Debug.Log ("Right");
 		}
 	}
 }

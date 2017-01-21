@@ -66,7 +66,7 @@ public class Room : MonoBehaviour
 				}
 			}
 		}
-		Debug.Log ("Returning Null for coord: " + coord);
+		//Debug.Log ("Returning Null for coord: " + coord);
 		return null;
 	}
 

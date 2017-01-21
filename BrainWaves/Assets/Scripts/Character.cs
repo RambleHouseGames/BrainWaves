@@ -63,10 +63,37 @@ public abstract class Character : MonoBehaviour {
 
 		Vector2 destination = GetDestination (myMove);
 		TileBase destinationTile = myCollumn.GetCurrentRoom().GetTile(destination);
-		if (destinationTile != null && destinationTile.GetTileType () == TileType.EMPTY) {
-			transform.position = destinationTile.transform.position;
-			transform.SetParent (destinationTile.transform);
-			coord = destination;
+		if (destinationTile == null)
+			return;
+		
+		TileType tileType = destinationTile.GetTileType ();
+
+		if (tileType != TileType.EMPTY)
+			Debug.Log (tileType);
+
+		// Blocking tiles.
+		if (tileType == TileType.WALL
+			|| tileType == TileType.LEVER
+			|| tileType == TileType.DOOR)
+			return;
+
+		// if tile contains boulder
+		// -if can push it
+		// --push it
+		// -if can't push it
+		// --cancel move
+
+		transform.position = destinationTile.transform.position;
+		transform.SetParent (destinationTile.transform);
+		coord = destination;
+
+		// Special tiles.
+		if (tileType == TileType.BUTTON) {
+			// TODO: trigger button
+		} else if (tileType == TileType.DEATH) {
+			// TODO: trigger death
+		} else {
+			// if any *adjacent* tile is a lever, trigger lever
 		}
 	}
 }

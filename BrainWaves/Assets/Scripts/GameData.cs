@@ -71,7 +71,6 @@ public class GameData : MonoBehaviour
 
 	public RoomCollumn GetNextRoomCollumn(RoomType myRoomType) {
 		int myI = roomOrder.IndexOf (myRoomType);
-		Debug.Log (myI);
 		if (myI == 3)
 			return null;
 		else
