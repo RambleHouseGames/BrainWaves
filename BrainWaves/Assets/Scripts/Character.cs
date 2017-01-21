@@ -21,7 +21,26 @@ public abstract class Character : MonoBehaviour {
 	}
 
 	// Get the destination for a move.
-	abstract protected Vector2 GetDestination (Move myMove);
+	virtual protected Vector2 GetDestination (Move myMove)	{
+		Vector2 dest;
+		switch (myMove) {
+		case Move.UP:
+			dest = coord + new Vector2 (0, 1);
+			break;
+		case Move.DOWN:
+			dest = coord + new Vector2 (0, -1);
+			break;
+		case Move.LEFT:
+			dest = coord + new Vector2 (-1, 0);
+			break;
+		case Move.RIGHT:
+			dest = coord + new Vector2 (1, 0);
+			break;
+		default:
+			throw new System.ArgumentOutOfRangeException ();
+		}
+		return dest;
+	}
 
 	// Translate the last person's move into my move.
 	abstract protected Move InterpretMove (Move yourMove);
