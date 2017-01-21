@@ -32,16 +32,13 @@ public class Room : MonoBehaviour
 			while (i < csv.Length) {
 				if (csv [i] == ',') {
 					if (value.Length > 0) {
-						Debug.Log ("" + value + " to: " + new Vector2(x, y));
 						InstantiateTileForCSVValue (int.Parse (value), new Vector2 (x, y));
 					}
 					x++;
 					value = "";
 				}
 				else if (csv [i] == '\n') {
-					Debug.Log ("NewLine");
 					if (value.Length > 0) {
-						Debug.Log ("" + value + " to: " + new Vector2(x, y));
 						InstantiateTileForCSVValue (int.Parse (value), new Vector2 (x, y));
 					}
 					y--;

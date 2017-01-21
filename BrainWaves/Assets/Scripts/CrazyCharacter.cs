@@ -9,6 +9,11 @@ public class CrazyCharacter : Character {
 		InitPosition ();
 	}
 
+	public override RoomType GetRoomType ()
+	{
+		return RoomType.CRAZY;
+	}
+
 	override protected Move InterpretMove (Move yourMove) {
 		return yourMove;
 	}

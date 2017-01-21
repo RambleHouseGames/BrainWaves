@@ -13,6 +13,8 @@ public abstract class Character : MonoBehaviour {
 	[SerializeField]
 	protected RoomCollumn myCollumn;
 
+	public abstract RoomType GetRoomType ();
+
 	protected void InitPosition() {
 		TileBase destinationTile = myCollumn.GetCurrentRoom().GetTile(coord);
 		if (destinationTile.GetTileType () == TileType.EMPTY) {
@@ -62,6 +64,12 @@ public abstract class Character : MonoBehaviour {
 			return;
 
 		Vector2 destination = GetDestination (myMove);
+
+		//Check For Vicory Door
+		if (destination == new Vector2 (4, 20))
+			GameData.Instance.ReportExitDoor (GetRoomType ());
+			
+
 		TileBase destinationTile = myCollumn.GetCurrentRoom().GetTile(destination);
 		if (destinationTile == null)
 			return;

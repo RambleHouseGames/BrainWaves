@@ -9,6 +9,11 @@ public class FlipCharacter : Character {
 		InitPosition ();
 	}
 
+	public override RoomType GetRoomType ()
+	{
+		return RoomType.FLIP;
+	}
+
 	override protected Vector2 GetDestination (Move myMove)
 	{
 		Vector2 dest;
