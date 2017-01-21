@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class GameData : MonoBehaviour 
 {
@@ -14,6 +15,11 @@ public class GameData : MonoBehaviour
 
 	[SerializeField]
 	private int progress = 0;
+
+	[SerializeField]
+	private List<PuzzleRequirement> puzzleRequirements;
+
+	private List<RoomType> victoryReports;
 
 	[Header("Collumns")]
 	public RoomCollumn mainCol;
@@ -82,8 +88,40 @@ public class GameData : MonoBehaviour
 		if(currentGameState == GameState.ADVANCING)
 			Debug.Log ("" + room + " Room finished advancing");
 	}
+
+	public void ReportExitDoor(RoomType type)
+	{
+		if (victoryReports == null || victoryReports.Contains(type))
+			victoryReports = new List<RoomType> ();
+		
+		victoryReports.Add (type);
+
+		PuzzleRequirement requirement = getRequirement (progress);
+		foreach (RoomType room in requirement.rooms) {
+			if (!victoryReports.Contains (room))
+				return;
+		}
+		progress++;
+	}
+
+	private PuzzleRequirement getRequirement(int progressNumber)
+	{
+		foreach (PuzzleRequirement puzzleRequirement in puzzleRequirements) {
+			if (puzzleRequirement.progressNumber == progressNumber)
+				return puzzleRequirement;
+		}
+		Debug.Assert (false, "No Puzzle Requirements found for progressNumber: " + progressNumber);
+		return null;
+	}
 }
 
 public enum RoomType {MAIN, FLIP, LAZY, CRAZY}
 public enum GameState {PLAYING, ADVANCING, CUT_SCENE}
 public enum Move {NONE, UP, DOWN, LEFT, RIGHT}
+
+[Serializable]
+public class PuzzleRequirement
+{
+	public int progressNumber;
+	public List<RoomType> rooms;
+}

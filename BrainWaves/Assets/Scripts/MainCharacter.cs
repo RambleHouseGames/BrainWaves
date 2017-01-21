@@ -10,6 +10,11 @@ public class MainCharacter : Character
 		InitPosition ();
 	}
 
+	public override RoomType GetRoomType ()
+	{
+		return RoomType.MAIN;
+	}
+
 	override protected Move InterpretMove (Move yourMove) {
 		return yourMove;
 	}

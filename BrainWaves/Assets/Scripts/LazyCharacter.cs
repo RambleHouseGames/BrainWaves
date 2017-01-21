@@ -11,6 +11,11 @@ public class LazyCharacter : Character {
 		InitPosition ();
 	}
 
+	public override RoomType GetRoomType ()
+	{
+		return RoomType.LAZY;
+	}
+
 	override protected Move InterpretMove (Move yourMove) {
 		Move move;
 		if (lazyThisTurn)
