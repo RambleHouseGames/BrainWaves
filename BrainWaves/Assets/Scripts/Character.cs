@@ -4,6 +4,8 @@ using UnityEngine;
 
 public abstract class Character : MonoBehaviour {
 
+	private float transmissionDelay = 0.0f;
+
 	[SerializeField]
 	protected RoomType myType;
 
@@ -44,12 +46,12 @@ public abstract class Character : MonoBehaviour {
 	}
 
 	// Send my move to the next person.
-	protected bool SendMove(Move myMove, int tiles) {
+	protected bool SendMove(Move myMove, int tiles, float delay) {
 		var roomCol = GameData.Instance.GetNextRoomCollumn (myType);
 		if (roomCol == null || roomCol.character == null) {
 			return true;
 		}
-		return roomCol.character.TryMove (myMove, tiles);
+		return roomCol.character.TryMove (myMove, tiles, delay + transmissionDelay);
 	}
 
 	protected void FindLegalMove1(Move myMove, out TileBase entering, out TileBase bumpingInto) {
@@ -93,7 +95,7 @@ public abstract class Character : MonoBehaviour {
 	}
 
 	// Receive a move from the last person (or user input) and execute it.
-	virtual protected bool TryMove(Move yourMove, int tiles) {
+	virtual protected bool TryMove(Move yourMove, int tiles = 1, float delay = 0f) {
 		//Debug.Log ("Trying move " + myType + " " + tiles);
 
 		Move myMove = InterpretMove (yourMove);
@@ -117,7 +119,7 @@ public abstract class Character : MonoBehaviour {
 		}
 
 		// Not dead: send moves, but quit if anyone else dies.
-		if (SendMove (myMove, tiles) == false) {
+		if (SendMove (myMove, tiles, delay) == false) {
 			return false;
 		}
 
@@ -133,13 +135,13 @@ public abstract class Character : MonoBehaviour {
 			Rock rock = myCollumn.GetCurrentRoom ().GetRock (entering);
 			if (rock != null) {
 				//Debug.Log ("found a rock!");
-				bool canPush = TryPushRock (rock, myCollumn.GetCurrentRoom(), entering, myMove);
+				bool canPush = TryPushRock (rock, myCollumn.GetCurrentRoom(), entering, myMove, delay);
 				if (!canPush)
 					return true;
 			}
 
 			// Move player.
-			StartCoroutine(MovementAnimation.SlideTo(transform, entering.transform.position));
+			StartCoroutine(MovementAnimation.SlideTo(transform, entering.transform.position, delay));
 			transform.SetParent (entering.transform);
 			coord = myCollumn.GetCurrentRoom().GetCoord(entering);
 		}
@@ -176,7 +178,7 @@ public abstract class Character : MonoBehaviour {
 		return result;
 	}
 
-	public bool TryPushRock(Rock rock, Room room, TileBase pushFromTile, Move move) {
+	public bool TryPushRock(Rock rock, Room room, TileBase pushFromTile, Move move, float delay) {
 		Vector2 pushFrom = room.GetCoord (pushFromTile);
 		Vector2 pushTo = MoveBy (pushFrom, move, 1f);
 		TileBase pushToTile = room.GetTile (pushTo);
@@ -195,7 +197,7 @@ public abstract class Character : MonoBehaviour {
 		if (room.GetRock (pushToTile) != null)
 			return false;
 
-		rock.Push (room, pushToTile, pushFromTile);
+		rock.Push (room, pushToTile, pushFromTile, delay);
 		return true;
 	}
 
