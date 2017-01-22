@@ -17,11 +17,19 @@ public class DoorTile : TileBase
 
 	public void Toggle() {
 		open = !open;
+		if (open)
+			AudioManager.Instance.PlayOpenDoor ();
+		else
+			AudioManager.Instance.PlayCloseDoor ();
 	}
 
 	public void SetOpen(bool value)
 	{
 		open = value;
+		if (open)
+			AudioManager.Instance.PlayOpenDoor ();
+		else
+			AudioManager.Instance.PlayCloseDoor ();
 	}
 	public override void resetRoom(){
 		open = false;
