@@ -31,16 +31,16 @@ public class CrazyCharacter : Character {
 		if (tile2 == null && tile1 == null) {
 			// Both null, so entering and bumping are null.
 			return;
-		} else if (tile2 != null && tile2.GetTileType ().IsWalkable ()) {
-			// Can enter tile2, so no bumping.
-			entering = tile2;
-		} else if (tile1 != null && tile1.GetTileType ().IsWalkable ()) {
-			// Can enter tile1 but not tile2, so bump tile2.
+		} else if (tile1 == null || !tile1.GetTileType ().IsWalkable()) {
+			// tile1 is not walkable, so we bump into it (or it's null)
+			bumpingInto = tile1;
+		} else if (tile2 == null || !tile2.GetTileType ().IsWalkable()) {
+			// tile1 is walkable, but not tile2, so we bump into tile2 (or it's null)
 			entering = tile1;
 			bumpingInto = tile2;
 		} else {
-			// Can't enter tile1, so bump it.
-			bumpingInto = tile1;
+			// tile1 and tile2 are walkable and not null, so enter tile2, no bumping
+			entering = tile2;
 		}
 	}
 }
