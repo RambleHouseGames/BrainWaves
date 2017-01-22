@@ -29,43 +29,56 @@ public abstract class Character : MonoBehaviour {
 	}
 
 	// Get the destination for a move.
-	virtual protected Vector2 GetDestination (Move myMove)	{
-		return MoveBy (coord, myMove, 1f);
+	virtual protected Vector2 GetDestination (Move myMove, int tiles)	{
+		return MoveBy (coord, myMove, tiles);
 	}
 
 	// Translate the last person's move into my move.
 	abstract protected Move InterpretMove (Move yourMove);
 
 	// Send my move to the next person.
-	protected bool SendMove(Move myMove) {
+	protected bool SendMove(Move myMove, int tiles) {
 		var roomCol = GameData.Instance.GetNextRoomCollumn (myType);
 		if (roomCol == null || roomCol.character == null)
 			return true;
-		return roomCol.character.TryMove (myMove);
+		return roomCol.character.TryMove (myMove, tiles);
 	}
 
 	// Receive a move from the last person (or user input) and execute it.
-	protected bool TryMove(Move yourMove) {
+	virtual protected bool TryMove(Move yourMove, int tiles) {
 		Move myMove = InterpretMove (yourMove);
 
 		if (myMove == Move.NONE)
 			return true;
-
-		Vector2 destination = GetDestination (myMove);
-
-		Room room = myCollumn.GetCurrentRoom ();
-		TileBase destinationTile = room.GetTile(destination);
-		TileBase leavingTile = room.GetTile (coord);
-		if (destinationTile == null)
-			return SendMove (myMove);
+		Room room = myCollumn.GetCurrentRoom (); TileBase leavingTile = room.GetTile (coord);
+		Vector2 destination = Vector2.one; TileBase destinationTile = null; TileType tileType = TileType.EMPTY;
+		for (int i = 1; i <= tiles; i++) {
+			destination = GetDestination (myMove, i);
 		
-		TileType tileType = destinationTile.GetTileType ();
+			TileBase tile = room.GetTile(destination);
+			if (tile == null)
+				break;
+			destinationTile = tile;
+			tileType = destinationTile.GetTileType ();
+			if (tileType == TileType.WALL || tileType == TileType.LEVER || tileType == TileType.DOOR) {
+				if (i == 1)
+					destinationTile = null;
+				else {
+					destination = GetDestination (myMove, i-1);
+					destinationTile = room.GetTile (destination);
+					tileType = destinationTile.GetTileType ();
+				} break;
+			}
+		}
+		if (destinationTile == null)
+			return SendMove (myMove, tiles);
+
 		TileType leavingTileType = leavingTile.GetTileType ();
 
 		if (tileType == TileType.DEATH) {
 			GameData.Instance.onDeath(false); return false;
 		}
-		if (!SendMove (myMove))
+		if (!SendMove (myMove, tiles))
 			return false;
 
 		// Blocking tiles.

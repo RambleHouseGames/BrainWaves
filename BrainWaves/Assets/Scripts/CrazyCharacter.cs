@@ -23,10 +23,9 @@ public class CrazyCharacter : Character {
 	override protected Move InterpretMove (Move yourMove) {
 		return yourMove;
 	}
-
-	// Get the destination for a move.
-	override protected Vector2 GetDestination (Move myMove)	{
-		return MoveBy (coord, myMove, 2f);
+		
+	protected override bool TryMove(Move yourMove, int tiles) {
+		return base.TryMove(yourMove, tiles*2);
 	}
 
 	private void onProgressChanged()

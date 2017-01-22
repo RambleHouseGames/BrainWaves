@@ -33,16 +33,16 @@ public class MainCharacter : Character
 		bool moveAttempted = false;
 		if (Input.GetKeyDown (KeyCode.UpArrow)) {
 			moveAttempted = true;
-			TryMove (Move.UP);
+			TryMove (Move.UP, 1);
 		} else if (Input.GetKeyDown (KeyCode.DownArrow)) {
 			moveAttempted = true;
-			TryMove (Move.DOWN);
+			TryMove (Move.DOWN, 1);
 		} else if (Input.GetKeyDown (KeyCode.LeftArrow)) {
 			moveAttempted = true;
-			TryMove (Move.LEFT);
+			TryMove (Move.LEFT, 1);
 		} else if (Input.GetKeyDown (KeyCode.RightArrow)) {
 			moveAttempted = true;
-			TryMove (Move.RIGHT);
+			TryMove (Move.RIGHT, 1);
 		}
 
 		// Second phase: resolve state changes.
