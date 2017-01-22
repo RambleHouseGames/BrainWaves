@@ -22,8 +22,8 @@ public class MainCharacter : Character
 
 	void Update()
 	{
-//		if (GameData.Instance.GetCurrentGameState () != GameState.PLAYING)
-//			return;
+		if (GameData.Instance.GetCurrentGameState () != GameState.PLAYING)
+			return;
 
 		// First phase: move characters and register state changes.
 		bool moveAttempted = false;

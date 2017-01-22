@@ -11,7 +11,7 @@ public class GameData : MonoBehaviour
 	private List<RoomType> roomOrder = new List<RoomType> {RoomType.MAIN, RoomType.FLIP, RoomType.LAZY, RoomType.CRAZY};
 
 	[SerializeField]
-	private GameState currentGameState = GameState.PLAYING;
+	private GameState currentGameState = GameState.CUT_SCENE;
 
 	[SerializeField]
 	private int progress = 0;
@@ -133,6 +133,11 @@ public class GameData : MonoBehaviour
 		//currentGameState = GameState.ADVANCING;
 		if (progressCallback != null)
 			progressCallback ();
+	}
+
+	public void ReportCutSceneComplete()
+	{
+		currentGameState = GameState.PLAYING;
 	}
 
 	private PuzzleRequirement getRequirement(int progressNumber)
