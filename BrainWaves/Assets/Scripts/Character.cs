@@ -154,6 +154,7 @@ public abstract class Character : MonoBehaviour {
 
 		// Check For Victory Door
 		if (isVictory()) {
+			AudioManager.Instance.PlaySwish ();
 			GameData.Instance.checkVictory();
 		}
 
