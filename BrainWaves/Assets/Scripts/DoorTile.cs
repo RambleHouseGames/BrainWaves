@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class DoorTile : TileBase
 {
+	[SerializeField]
 	private bool open = false;
 
 	public override TileType GetTileType ()
