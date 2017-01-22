@@ -21,7 +21,10 @@ public class LazyCharacter : Character {
 		return RoomType.LAZY;
 	}
 	override protected bool TryMove(Move yourMove, int tiles) {
-		if(base.TryMove(yourMove, tiles)) lazyThisTurn = !lazyThisTurn;
+		if (base.TryMove (yourMove, tiles)) {
+			lazyThisTurn = !lazyThisTurn;
+			return true;
+		} else return false;
 	}
 
 	override protected Move InterpretMove (Move yourMove) {
