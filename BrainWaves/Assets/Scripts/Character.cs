@@ -52,7 +52,7 @@ public abstract class Character : MonoBehaviour {
 		return roomCol.character.TryMove (myMove, tiles);
 	}
 
-	virtual protected void FindLegalMove(Move myMove, out TileBase entering, out TileBase bumpingInto) {
+	protected void FindLegalMove1(Move myMove, out TileBase entering, out TileBase bumpingInto) {
 		entering = null;
 		bumpingInto = null;
 
@@ -67,6 +67,31 @@ public abstract class Character : MonoBehaviour {
 		}
 	}
 
+	protected void FindLegalMove2(Move myMove, out TileBase entering, out TileBase bumpingInto) {
+		entering = null;
+		bumpingInto = null;
+
+		// Tile 2 spaces away.
+		var tile2 = myCollumn.GetCurrentRoom ().GetTile (MoveBy (coord, myMove, 2));
+		// Tile 1 space away.
+		var tile1 = myCollumn.GetCurrentRoom ().GetTile (MoveBy (coord, myMove, 1));
+
+		if (tile2 == null && tile1 == null) {
+			// Both null, so entering and bumping are null.
+			return;
+		} else if (tile1 == null || !tile1.GetTileType ().IsWalkable()) {
+			// tile1 is not walkable, so we bump into it (or it's null)
+			bumpingInto = tile1;
+		} else if (tile2 == null || !tile2.GetTileType ().IsWalkable()) {
+			// tile1 is walkable, but not tile2, so we bump into tile2 (or it's null)
+			entering = tile1;
+			bumpingInto = tile2;
+		} else {
+			// tile1 and tile2 are walkable and not null, so enter tile2, no bumping
+			entering = tile2;
+		}
+	}
+
 	// Receive a move from the last person (or user input) and execute it.
 	virtual protected bool TryMove(Move yourMove, int tiles) {
 		//Debug.Log ("Trying move " + myType + " " + tiles);
@@ -78,7 +103,10 @@ public abstract class Character : MonoBehaviour {
 
 		TileBase entering;
 		TileBase bumpingInto;
-		FindLegalMove (myMove, out entering, out bumpingInto);
+		if (tiles == 1)
+			FindLegalMove1 (myMove, out entering, out bumpingInto);
+		else
+			FindLegalMove2 (myMove, out entering, out bumpingInto);
 
 		TileBase leaving = (entering != null) ? myCollumn.GetCurrentRoom().GetTile(coord) : null;
 
@@ -89,7 +117,7 @@ public abstract class Character : MonoBehaviour {
 		}
 
 		// Not dead: send moves, but quit if anyone else dies.
-		if (SendMove (myMove, 1) == false) {
+		if (SendMove (myMove, tiles) == false) {
 			return false;
 		}
 
