@@ -72,6 +72,7 @@ public abstract class Character : MonoBehaviour {
 		// Push rock?
 		Rock rock = room.GetRock (destination);
 		if (rock != null) {
+			//Debug.Log ("found a rock!");
 			bool canPush = TryPushRock (rock, room, destination, myMove);
 			if (!canPush)
 				return;
@@ -80,7 +81,6 @@ public abstract class Character : MonoBehaviour {
 		// Move player.
 		transform.position = destinationTile.transform.position;
 		transform.SetParent (destinationTile.transform);
-		Vector3 leaving = coord;
 		coord = destination;
 
 		// Buttons
