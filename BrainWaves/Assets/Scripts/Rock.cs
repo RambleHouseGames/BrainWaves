@@ -8,6 +8,11 @@ public class Rock : MonoBehaviour {
 	
 	public void Start(){
 		startTile = transform.parent.gameObject.GetComponent<TileBase>();
+		SpriteRenderer renderer = gameObject.AddComponent<SpriteRenderer> ();
+		renderer.sprite = GameData.Instance.rockSprite; renderer.sortingOrder = 1;
+		TextMesh text = renderer.gameObject.GetComponentInChildren<TextMesh> ();
+		if (text != null)
+			GameObject.Destroy (text.gameObject);
 	}
 	
 	public void resetRoom(){

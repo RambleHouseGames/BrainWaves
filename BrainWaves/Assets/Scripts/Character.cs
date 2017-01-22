@@ -122,7 +122,8 @@ public abstract class Character : MonoBehaviour {
 		// Special blocking tile.
 		if (TileType.LEVER.TypeEquals(bumpingInto) && myMove == Move.UP) {
 			Debug.Log ("Trigger Lever");
-			GameData.Instance.RegisterStateChange((bumpingInto as LeverTile).Trigger);
+			//GameData.Instance.RegisterStateChange((bumpingInto as LeverTile).Trigger);
+			(bumpingInto as LeverTile).Trigger();
 			return true;
 		}
 
@@ -157,6 +158,10 @@ public abstract class Character : MonoBehaviour {
 		}
 
 		return true;
+	}
+
+	public void Start(){
+		gameObject.GetComponent<SpriteRenderer> ().sortingOrder = 1;
 	}
 
 	public bool isVictory(){

@@ -12,8 +12,24 @@ public class LeverTile : TileBase
 	}
 
 	public void Trigger() {
-		if (opens != null)
-			opens.Toggle ();
+		if (opens != null) {
+			opens.Toggle (); changeOpen ();
+		}
 	}
 	public override void resetRoom(){}
+
+	private Sprite defaultSprite;
+
+	public void Start(){
+		SpriteRenderer renderer = gameObject.GetComponent<SpriteRenderer> ();
+		defaultSprite = renderer.sprite;
+	}
+	private void changeOpen(){
+		SpriteRenderer renderer = gameObject.GetComponent<SpriteRenderer> ();
+		if (opens.open) {
+			renderer.sprite = GameData.Instance.levelOn;
+		} else {
+			renderer.sprite = defaultSprite;
+		}
+	}
 }

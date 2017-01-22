@@ -5,7 +5,7 @@ using UnityEngine;
 public class DoorTile : TileBase
 {
 	[SerializeField]
-	private bool open = false;
+	public bool open = false;
 
 	public override TileType GetTileType ()
 	{
@@ -16,7 +16,7 @@ public class DoorTile : TileBase
 	}
 
 	public void Toggle() {
-		open = !open;
+		open = !open; changeOpen ();
 		if (open)
 			AudioManager.Instance.PlayOpenDoor ();
 		else
@@ -25,13 +25,28 @@ public class DoorTile : TileBase
 
 	public void SetOpen(bool value)
 	{
-		open = value;
+		open = value; changeOpen ();
 		if (open)
 			AudioManager.Instance.PlayOpenDoor ();
 		else
 			AudioManager.Instance.PlayCloseDoor ();
 	}
 	public override void resetRoom(){
-		open = false;
+		open = false; changeOpen ();
+	}
+
+	private Sprite defaultSprite;
+
+	public void Start(){
+		SpriteRenderer renderer = gameObject.GetComponent<SpriteRenderer> ();
+		defaultSprite = renderer.sprite;
+	}
+	private void changeOpen(){
+		SpriteRenderer renderer = gameObject.GetComponent<SpriteRenderer> ();
+		if (open) {
+			renderer.sprite = GameData.Instance.doorOpen;
+		} else {
+			renderer.sprite = defaultSprite;
+		}
 	}
 }
