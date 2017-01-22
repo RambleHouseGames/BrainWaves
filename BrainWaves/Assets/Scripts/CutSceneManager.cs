@@ -29,6 +29,10 @@ public class CutSceneManager : MonoBehaviour
 	private void onProgressChanged()
 	{
 		int progressNumber = GameData.Instance.GetCurrentProgress ();
+
+		if (progressNumber == 4)
+			progressNumber += UnityEngine.Random.Range (0, 1);
+
 		foreach (Dialogue dialogue in dialogues) {
 			if (dialogue.progressTrigger == progressNumber) {
 				activeDialogue = dialogue;
