@@ -34,7 +34,6 @@ public class GameData : MonoBehaviour
 
 	[Header("Prefabs")]
 	public List<TilePrefab> tilePrefabs;
-	public GameObject rockPrefab;
 
 	void Awake() {
 		Instance = this;
