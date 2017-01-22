@@ -51,13 +51,4 @@ public class MainCharacter : Character
 			GameData.Instance.onDeath (true);
 		}
 	}
-
-	private void onProgressChanged()
-	{
-		Room newRoom = myCollumn.GetCurrentRoom ();
-		TileBase tile = newRoom.GetTile (new Vector2(4, 0));
-		transform.position = tile.transform.position;
-		transform.SetParent (tile.transform);
-		coord = new Vector2 (4, 0);
-	}
 }

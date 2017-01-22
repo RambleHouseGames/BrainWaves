@@ -7,7 +7,6 @@ public class CrazyCharacter : Character {
 	void Awake()
 	{
 		InitPosition ();
-
 	}
 
 	void Start()
@@ -20,7 +19,7 @@ public class CrazyCharacter : Character {
 		return RoomType.CRAZY;
 	}
 
-	override protected void TryLegalMove(Move myMove, out TileBase entering, out TileBase bumpingInto) {
+	override protected void FindLegalMove(Move myMove, out TileBase entering, out TileBase bumpingInto) {
 		entering = null;
 		bumpingInto = null;
 
@@ -43,14 +42,5 @@ public class CrazyCharacter : Character {
 			// Can't enter tile1, so bump it.
 			bumpingInto = tile1;
 		}
-	}
-
-	private void onProgressChanged()
-	{
-		Room newRoom = myCollumn.GetCurrentRoom ();
-		TileBase tile = newRoom.GetTile (new Vector2(4, 0));
-		transform.position = tile.transform.position;
-		transform.SetParent (tile.transform);
-		coord = new Vector2 (4, 0);
 	}
 }

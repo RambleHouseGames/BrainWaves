@@ -21,11 +21,21 @@ public abstract class Character : MonoBehaviour {
 			transform.position = destinationTile.transform.position;
 		}
 	}
+
 	public void resetRoom(){
 		coord.x = 4; coord.y = 0;
 		TileBase destinationTile = myCollumn.GetCurrentRoom().GetTile(coord);
 		transform.position = destinationTile.transform.position;
 		transform.SetParent (destinationTile.transform);
+	}
+
+	protected void onProgressChanged()
+	{
+		Room newRoom = myCollumn.GetCurrentRoom ();
+		TileBase tile = newRoom.GetTile (new Vector2(4, 0));
+		transform.position = tile.transform.position;
+		transform.SetParent (tile.transform);
+		coord = new Vector2 (4, 0);
 	}
 
 	// Translate the last person's move into my move.
@@ -41,7 +51,7 @@ public abstract class Character : MonoBehaviour {
 		return roomCol.character.TryMove (myMove, tiles);
 	}
 
-	virtual protected void TryLegalMove(Move myMove, out TileBase entering, out TileBase bumpingInto) {
+	virtual protected void FindLegalMove(Move myMove, out TileBase entering, out TileBase bumpingInto) {
 		entering = null;
 		bumpingInto = null;
 
@@ -67,7 +77,7 @@ public abstract class Character : MonoBehaviour {
 
 		TileBase entering;
 		TileBase bumpingInto;
-		TryLegalMove (myMove, out entering, out bumpingInto);
+		FindLegalMove (myMove, out entering, out bumpingInto);
 
 		TileBase leaving = (entering != null) ? myCollumn.GetCurrentRoom().GetTile(coord) : null;
 

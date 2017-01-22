@@ -30,13 +30,4 @@ public class LazyCharacter : Character {
 		lazyThisTurn = !lazyThisTurn;
 		return move;
 	}
-
-	private void onProgressChanged()
-	{
-		Room newRoom = myCollumn.GetCurrentRoom ();
-		TileBase tile = newRoom.GetTile (new Vector2(4, 0));
-		transform.position = tile.transform.position;
-		transform.SetParent (tile.transform);
-		coord = new Vector2 (4, 0);
-	}
 }
