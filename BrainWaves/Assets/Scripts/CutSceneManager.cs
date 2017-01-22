@@ -8,42 +8,29 @@ public class CutSceneManager : MonoBehaviour
 	[SerializeField]
 	private List<Dialogue> dialogues;
 
-	private bool cutSceneActive = false;
-	private int lineNumber = 0;
+	private Dialogue activeDialogue = null;
+	private int currentLine = 0;
 
 	void Start()
 	{
 		GameData.Instance.AddProgressCallback (onProgressChanged);
+		onProgressChanged ();
 	}
 
 	private void onProgressChanged()
 	{
-		Debug.Log ("onProgressChanged");
-		cutSceneActive = true;
-		GetDialogueForProgress (GameData.Instance.GetCurrentProgress ()).lines [lineNumber].transform.Rotate(new Vector3(0, 0, 90f));
-	}
-
-	private Dialogue GetDialogueForProgress(int progressNumber)
-	{
+		int progressNumber = GameData.Instance.GetCurrentProgress ();
 		foreach (Dialogue dialogue in dialogues) {
 			if (dialogue.progressTrigger == progressNumber) {
-				return dialogue;
+				activeDialogue = dialogue;
+				startDialogue ();
 			}
 		}
-		Debug.Assert (false, "No Dialogue for progress: " + progressNumber);
-		return null;
 	}
 
-	void Update()
+	private void startDialogue()
 	{
-		if (Input.GetKeyDown (KeyCode.Return)) {
-			advanceDialogue ();
-		}
-	}
-
-	private void advanceDialogue()
-	{
-		
+		GameObject.Instantiate (activeDialogue.lines[currentLine]);
 	}
 }
 
