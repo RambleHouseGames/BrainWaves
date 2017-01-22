@@ -27,16 +27,26 @@ public class AudioManager : MonoBehaviour
 	[SerializeField]
 	private AudioSource MusicAudioSource;
 
+	[SerializeField]
+	private AudioSource RumbleAudioSource;
+
+	private float randomRumbleGap;
+
 	void Awake()
 	{
 		Instance = this;
 		MusicAudioSource.clip = Music;
+		randomRumbleGap = Random.Range (3f, 10f);
 	}
 
 	void Update()
 	{
 		if (!MusicAudioSource.isPlaying)
 			MusicAudioSource.Play ();
+
+		randomRumbleGap -= Time.deltaTime;
+		if (randomRumbleGap <= 0)
+			AudioManager.Instance.PlayRumble ();
 	}
 
 	public void PlayOpenDoor()
@@ -58,5 +68,11 @@ public class AudioManager : MonoBehaviour
 		EffectAudioSource.Stop ();
 		EffectAudioSource.clip = Swish;
 		EffectAudioSource.Play ();
+	}
+
+	public void PlayRumble()
+	{
+		if (!RumbleAudioSource.isPlaying)
+			RumbleAudioSource.Play ();
 	}
 }
