@@ -46,8 +46,9 @@ public abstract class Character : MonoBehaviour {
 	// Send my move to the next person.
 	protected bool SendMove(Move myMove, int tiles) {
 		var roomCol = GameData.Instance.GetNextRoomCollumn (myType);
-		if (roomCol == null || roomCol.character == null)
+		if (roomCol == null || roomCol.character == null) {
 			return true;
+		}
 		return roomCol.character.TryMove (myMove, tiles);
 	}
 
@@ -110,7 +111,7 @@ public abstract class Character : MonoBehaviour {
 			}
 
 			// Move player.
-			transform.position = entering.transform.position;
+			StartCoroutine(MovementAnimation.SlideTo(transform, entering.transform.position));
 			transform.SetParent (entering.transform);
 			coord = myCollumn.GetCurrentRoom().GetCoord(entering);
 		}

@@ -13,6 +13,7 @@ public class MainCharacter : Character
 	void Start()
 	{
 		GameData.Instance.AddProgressCallback (onProgressChanged);
+		MovementAnimation.DoneAnimating += AnimationComplete;
 	}
 
 	public override RoomType GetRoomType ()
@@ -23,6 +24,10 @@ public class MainCharacter : Character
 	void Update()
 	{
 		if (GameData.Instance.GetCurrentGameState () != GameState.PLAYING)
+			return;
+
+		// While animating, don't accept user input.
+		if (MovementAnimation.Animating)
 			return;
 
 		// First phase: move characters and register state changes.
@@ -41,14 +46,15 @@ public class MainCharacter : Character
 			TryMove (Move.RIGHT, 1);
 		}
 
-		// Second phase: resolve state changes.
-		if (moveAttempted) {
-			GameData.Instance.ExecuteStateChanges ();
-		}
+		// Second phase: resolve state changes will happen when animations complete.
 
 		// Reset Level Key
 		if (Input.GetKeyDown (KeyCode.R)) {
 			GameData.Instance.onDeath (true);
 		}
+	}
+
+	private void AnimationComplete() {
+		GameData.Instance.ExecuteStateChanges();
 	}
 }
