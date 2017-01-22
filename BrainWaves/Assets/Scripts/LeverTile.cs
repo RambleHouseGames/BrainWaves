@@ -12,6 +12,7 @@ public class LeverTile : TileBase
 	}
 
 	public void Trigger() {
-		opens.Toggle ();
+		if (opens != null)
+			opens.Toggle ();
 	}
 }

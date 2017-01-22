@@ -24,24 +24,7 @@ public abstract class Character : MonoBehaviour {
 
 	// Get the destination for a move.
 	virtual protected Vector2 GetDestination (Move myMove)	{
-		Vector2 dest;
-		switch (myMove) {
-		case Move.UP:
-			dest = coord + new Vector2 (0, 1);
-			break;
-		case Move.DOWN:
-			dest = coord + new Vector2 (0, -1);
-			break;
-		case Move.LEFT:
-			dest = coord + new Vector2 (-1, 0);
-			break;
-		case Move.RIGHT:
-			dest = coord + new Vector2 (1, 0);
-			break;
-		default:
-			throw new System.ArgumentOutOfRangeException ();
-		}
-		return dest;
+		return MoveBy (coord, myMove, 1f);
 	}
 
 	// Translate the last person's move into my move.
@@ -70,7 +53,8 @@ public abstract class Character : MonoBehaviour {
 			GameData.Instance.ReportExitDoor (GetRoomType ());
 			
 
-		TileBase destinationTile = myCollumn.GetCurrentRoom().GetTile(destination);
+		Room room = myCollumn.GetCurrentRoom ();
+		TileBase destinationTile = room.GetTile(destination);
 		if (destinationTile == null)
 			return;
 		
@@ -88,12 +72,16 @@ public abstract class Character : MonoBehaviour {
 			return;
 		}
 
-		// if tile contains boulder
-		// -if can push it
-		// --push it
-		// -if can't push it
-		// --cancel move
+		// Push rock?
+		Rock rock = room.GetRock (destination);
+		if (rock != null) {
+			Debug.Log ("rock not null");
+			bool canPush = TryPushRock (rock, room, destination, myMove);
+			if (!canPush)
+				return;
+		}
 
+		// Move player.
 		transform.position = destinationTile.transform.position;
 		transform.SetParent (destinationTile.transform);
 		coord = destination;
@@ -116,5 +104,49 @@ public abstract class Character : MonoBehaviour {
 		};
 		result.RemoveAll(t => t == null);
 		return result;
+	}
+
+	public bool TryPushRock(Rock rock, Room room, Vector2 destination, Move move) {
+		Vector3 pushTo = MoveBy (destination, move, 1f);
+		TileBase pushToTile = room.GetTile (pushTo);
+		if (pushToTile == null)
+			return false;
+
+		TileType tileType = pushToTile.GetTileType ();
+		if (tileType == TileType.WALL
+		    || tileType == TileType.LEVER
+		    || tileType == TileType.DEATH)
+			return false;
+
+		if (room.GetRock (pushTo) != null)
+			return false;
+
+		TileBase pushFromTile = room.GetTile (destination);
+		rock.Push (room, pushToTile, pushFromTile);
+		return true;
+	}
+
+	public static Vector2 MoveBy(Vector2 initial, Move moveDirection, float tiles) {
+		Vector2 dest;
+		switch (moveDirection) {
+		case Move.UP:
+			dest = initial + tiles * Vector2.up;
+			break;
+		case Move.DOWN:
+			dest = initial + tiles * Vector2.down;
+			break;
+		case Move.LEFT:
+			dest = initial + tiles * Vector2.left;
+			break;
+		case Move.RIGHT:
+			dest = initial + tiles * Vector2.right;
+			break;
+		case Move.NONE:
+			dest = initial;
+			break;
+		default:
+			throw new System.ArgumentOutOfRangeException ();
+		}
+		return dest;
 	}
 }
