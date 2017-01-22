@@ -16,7 +16,7 @@ public class Rock : MonoBehaviour {
 			GameData.Instance.RegisterStateChange((pushToTile as ButtonTile).RockOn);
 		}
 		if (pushFromTile.GetTileType() == TileType.BUTTON) {
-			GameData.Instance.RegisterStateChange((pushToTile as ButtonTile).RockOff);
+			GameData.Instance.RegisterStateChange((pushFromTile as ButtonTile).RockOff);
 		}
 
 		transform.position = pushToTile.transform.position;
