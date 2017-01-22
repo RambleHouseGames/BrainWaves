@@ -6,10 +6,10 @@ public class Rock : MonoBehaviour {
 
 	public void Push (Room room, TileBase pushToTile, TileBase pushFromTile) {
 		if (pushToTile.GetTileType() == TileType.BUTTON) {
-			(pushToTile as ButtonTile).PressOn ();
+			(pushToTile as ButtonTile).RockOn ();
 		}
 		if (pushFromTile.GetTileType() == TileType.BUTTON) {
-			(pushToTile as ButtonTile).PressOff ();
+			(pushToTile as ButtonTile).RockOff ();
 		}
 
 		transform.position = pushToTile.transform.position;

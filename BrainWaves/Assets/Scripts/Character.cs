@@ -48,17 +48,14 @@ public abstract class Character : MonoBehaviour {
 
 		Vector2 destination = GetDestination (myMove);
 
-		//Check For Vicory Door
-		if (destination == new Vector2 (4, 20))
-			GameData.Instance.ReportExitDoor (GetRoomType ());
-			
-
 		Room room = myCollumn.GetCurrentRoom ();
 		TileBase destinationTile = room.GetTile(destination);
+		TileBase leavingTile = room.GetTile (coord);
 		if (destinationTile == null)
 			return;
 		
 		TileType tileType = destinationTile.GetTileType ();
+		TileType leavingTileType = leavingTile.GetTileType ();
 
 		// Blocking tiles.
 		if (tileType == TileType.WALL
@@ -75,7 +72,6 @@ public abstract class Character : MonoBehaviour {
 		// Push rock?
 		Rock rock = room.GetRock (destination);
 		if (rock != null) {
-			Debug.Log ("rock not null");
 			bool canPush = TryPushRock (rock, room, destination, myMove);
 			if (!canPush)
 				return;
@@ -84,13 +80,24 @@ public abstract class Character : MonoBehaviour {
 		// Move player.
 		transform.position = destinationTile.transform.position;
 		transform.SetParent (destinationTile.transform);
+		Vector3 leaving = coord;
 		coord = destination;
 
-		// Special tiles.
+		// Buttons
 		if (tileType == TileType.BUTTON) {
-			// TODO: trigger button
-		} else if (tileType == TileType.DEATH) {
+			(destinationTile as ButtonTile).PlayerOn ();
+		}
+		if (leavingTileType == TileType.BUTTON) {
+			(leavingTile as ButtonTile).PlayerOff ();
+		}
+
+		if (tileType == TileType.DEATH) {
 			// TODO: trigger death
+		}
+
+		// Check For Victory Door
+		if (destination == new Vector2 (4, 20)) {
+			GameData.Instance.ReportExitDoor (GetRoomType ());
 		}
 	}
 
