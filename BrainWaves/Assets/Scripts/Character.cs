@@ -110,7 +110,7 @@ public abstract class Character : MonoBehaviour {
 
 		// Quit if we've died.
 		if (TileType.DEATH.TypeEquals(entering)) {
-			//GameData.Instance.onDeath(false);
+			GameData.Instance.onDeath(false);
 			return false;
 		}
 
