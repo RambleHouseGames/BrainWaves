@@ -16,7 +16,7 @@ public class LeverTile : TileBase
 			opens.Toggle (); changeOpen ();
 		}
 	}
-	public override void resetRoom(){}
+	public override void resetRoom(){gameObject.GetComponent<SpriteRenderer> ().sprite = defaultSprite;}
 
 	private Sprite defaultSprite;
 
