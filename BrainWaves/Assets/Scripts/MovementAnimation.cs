@@ -17,6 +17,11 @@ public static class MovementAnimation {
 		if (animating == 0) DoneAnimating();
 	}
 
+	public static void EndAllAnimations() {
+		animating = 0;
+		DoneAnimating();
+	}
+
 	public static bool Animating {
 		get { return animating > 0; }
 	}
