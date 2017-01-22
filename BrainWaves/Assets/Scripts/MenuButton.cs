@@ -44,6 +44,7 @@ public class MenuButton : MonoBehaviour
 			Debug.Log ("The Most Awesomest Game What Ever Existed!!");
 			return;
 		case MenuButtonType.QUIT:
+			Debug.Log ("Quit");
 			Application.Quit ();
 			return;
 		default:
