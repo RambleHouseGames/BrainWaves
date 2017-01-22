@@ -160,10 +160,6 @@ public abstract class Character : MonoBehaviour {
 		return true;
 	}
 
-	public void Start(){
-		gameObject.GetComponent<SpriteRenderer> ().sortingOrder = 1;
-	}
-
 	public bool isVictory(){
 		return coord == new Vector2 (4, 20);
 	}
