@@ -15,38 +15,45 @@ public class Room : MonoBehaviour
 	[SerializeField]
 	private List<RoomTile> tileLocators;
 
+	[SerializeField]
+	private List<TileSprite> tileSprites;
+
 	void Awake()
 	{
 		if (import == false)
 			return;
 
-		int x = 0;
-		int y = 20;
-		if (import) {
-			string csv = File.ReadAllText (Application.streamingAssetsPath + "/" + CSVPath);
-			int i = 0;
-			string value = "";
-			while (i < csv.Length) {
-				if (csv [i] == ',') {
-					if (value.Length > 0) {
-						InstantiateTileForCSVValue (int.Parse (value), new Vector2 (x, y));
-					}
-					x++;
-					value = "";
-				}
-				else if (csv [i] == '\n') {
-					if (value.Length > 0) {
-						InstantiateTileForCSVValue (int.Parse (value), new Vector2 (x, y));
-					}
-					y--;
-					x = 0;
-					value = "";
-				}
-				else
-					value += csv [i];
-				i++;
-			}
+		foreach (RoomTile roomTile in tileLocators) {
+			replaceTileSpriteAndDestroyText (roomTile.tile.GetComponentInChildren<TileBase>());
 		}
+
+//		int x = 0;
+//		int y = 20;
+//		if (import) {
+//			string csv = File.ReadAllText (Application.streamingAssetsPath + "/" + CSVPath);
+//			int i = 0;
+//			string value = "";
+//			while (i < csv.Length) {
+//				if (csv [i] == ',') {
+//					if (value.Length > 0) {
+//						InstantiateTileForCSVValue (int.Parse (value), new Vector2 (x, y));
+//					}
+//					x++;
+//					value = "";
+//				}
+//				else if (csv [i] == '\n') {
+//					if (value.Length > 0) {
+//						InstantiateTileForCSVValue (int.Parse (value), new Vector2 (x, y));
+//					}
+//					y--;
+//					x = 0;
+//					value = "";
+//				}
+//				else
+//					value += csv [i];
+//				i++;
+//			}
+//		}
 	}
 	public void restartRoom(){
 		foreach (RoomTile tileLocator in tileLocators) {
@@ -133,6 +140,20 @@ public class Room : MonoBehaviour
 		//	rock.transform.localScale = Vector3.one;
 		//}
 	}
+
+	private void replaceTileSpriteAndDestroyText(TileBase tile)
+	{
+		foreach (TileSprite tileSprite in tileSprites) {
+			if(tileSprite.type == tile.GetTileType())
+			{
+				SpriteRenderer renderer = tile.GetComponentInChildren<SpriteRenderer> ();
+				renderer.sprite = tileSprite.sprite;
+				TextMesh text = renderer.gameObject.GetComponentInChildren<TextMesh> ();
+				if(text != null)
+					GameObject.Destroy(text.gameObject);
+			}
+		}
+	}
 }
 
 [Serializable]
@@ -140,4 +161,11 @@ public class RoomTile
 {
 	public Vector2 coord;
 	public GameObject tile;
+}
+
+[Serializable]
+public class TileSprite
+{
+	public TileType type;
+	public Sprite sprite;
 }
