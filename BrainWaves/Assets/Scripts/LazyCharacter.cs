@@ -6,6 +6,9 @@ public class LazyCharacter : Character {
 
 	private bool lazyThisTurn = false;
 
+	[SerializeField]
+	private GameObject sleepIndicator;
+
 	void Awake()
 	{
 		InitPosition ();
@@ -23,6 +26,7 @@ public class LazyCharacter : Character {
 	override protected bool TryMove(Move yourMove, int tiles = 1, float delay = 0f) {
 		if (base.TryMove (yourMove, tiles, delay)) {
 			lazyThisTurn = !lazyThisTurn;
+			sleepIndicator.SetActive (lazyThisTurn);
 			return true;
 		} else return false;
 	}
