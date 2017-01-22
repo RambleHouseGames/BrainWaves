@@ -24,7 +24,7 @@ public class Room : MonoBehaviour
 			return;
 
 		foreach (RoomTile roomTile in tileLocators) {
-			replaceTileSpriteAndDestroyText (roomTile.tile.GetComponentInChildren<TileBase>());
+			fixTile (roomTile.tile.GetComponentInChildren<TileBase>());
 		}
 
 //		int x = 0;
@@ -141,16 +141,25 @@ public class Room : MonoBehaviour
 		//}
 	}
 
-	private void replaceTileSpriteAndDestroyText(TileBase tile)
+	private void fixTile(TileBase tile)
 	{
-		foreach (TileSprite tileSprite in tileSprites) {
-			if(tileSprite.type == tile.GetTileType())
-			{
-				SpriteRenderer renderer = tile.GetComponentInChildren<SpriteRenderer> ();
-				renderer.sprite = tileSprite.sprite;
-				TextMesh text = renderer.gameObject.GetComponentInChildren<TextMesh> ();
-				if(text != null)
-					GameObject.Destroy(text.gameObject);
+		GameObject go = tile.gameObject;
+		Destroy (tile);
+		TileBase childTile;
+		foreach (Transform child in go.transform) {
+			if (child.GetComponent<TileBase> () != null) {
+				childTile = child.GetComponent<TileBase> ();
+				foreach (TileSprite tileSprite in tileSprites) {
+					if (tileSprite.type == childTile.GetTileType ()) {
+						SpriteRenderer renderer = childTile.GetComponent<SpriteRenderer> ();
+						Debug.Log ("Fixing: " + childTile.gameObject.name);
+						renderer.sprite = tileSprite.sprite;
+						TextMesh text = renderer.gameObject.GetComponentInChildren<TextMesh> ();
+						if (text != null)
+							GameObject.Destroy (text.gameObject);
+					} else
+						Debug.Log ("type: " + childTile.GetTileType ());
+				}
 			}
 		}
 	}
