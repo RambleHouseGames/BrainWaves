@@ -77,7 +77,7 @@ public abstract class Character : MonoBehaviour {
 		if (tileType == TileType.LEVER) {
 			if (myMove == Move.UP) {
 				Debug.Log ("Trigger Lever");
-				(destinationTile as LeverTile).Trigger ();
+				GameData.Instance.RegisterStateChange((destinationTile as LeverTile).Trigger);
 			} return true;
 		}
 
@@ -97,13 +97,14 @@ public abstract class Character : MonoBehaviour {
 
 		// Buttons
 		if (tileType == TileType.BUTTON) {
-			(destinationTile as ButtonTile).PlayerOn ();
+			GameData.Instance.RegisterStateChange((destinationTile as ButtonTile).PlayerOn);
 		}
 		if (leavingTileType == TileType.BUTTON) {
-			(leavingTile as ButtonTile).PlayerOff ();
+			GameData.Instance.RegisterStateChange((leavingTile as ButtonTile).PlayerOff);
 		}
 
 		// Check For Victory Door
+		if (GetRoomType () == RoomType.MAIN)
 		if (destination == new Vector2 (4, 20)) {
 			GameData.Instance.ReportExitDoor (GetRoomType ());
 		} return true;
