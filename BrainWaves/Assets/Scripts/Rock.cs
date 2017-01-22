@@ -7,7 +7,6 @@ public class Rock : MonoBehaviour {
 	private TileBase startTile;
 	
 	public void Start(){
-		startTile = transform.parent.gameObject.GetComponent<TileBase>();
 		SpriteRenderer renderer = gameObject.AddComponent<SpriteRenderer> ();
 		renderer.sprite = GameData.Instance.rockSprite; renderer.sortingOrder = 1;
 		TextMesh text = renderer.gameObject.GetComponentInChildren<TextMesh> ();
@@ -16,11 +15,16 @@ public class Rock : MonoBehaviour {
 	}
 	
 	public void resetRoom(){
-		transform.position = startTile.transform.position;
-		transform.SetParent (startTile.transform);
+		if (startTile != null) {
+			transform.position = startTile.transform.position;
+			transform.SetParent (startTile.transform);
+		}
 	}
 	
 	public void Push (Room room, TileBase pushToTile, TileBase pushFromTile, float delay) {
+		if (startTile == null) {
+			startTile = transform.parent.gameObject.GetComponent<TileBase> ();
+		}
 		if (pushToTile.GetTileType() == TileType.BUTTON) {
 			GameData.Instance.RegisterStateChange((pushToTile as ButtonTile).RockOn);
 		}
