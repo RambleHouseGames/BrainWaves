@@ -20,10 +20,6 @@ public class MainCharacter : Character
 		return RoomType.MAIN;
 	}
 
-	override protected Move InterpretMove (Move yourMove) {
-		return yourMove;
-	}
-
 	void Update()
 	{
 //		if (GameData.Instance.GetCurrentGameState () != GameState.PLAYING)
@@ -54,14 +50,5 @@ public class MainCharacter : Character
 		if (Input.GetKeyDown (KeyCode.R)) {
 			GameData.Instance.onDeath (true);
 		}
-	}
-
-	private void onProgressChanged()
-	{
-		Room newRoom = myCollumn.GetCurrentRoom ();
-		TileBase tile = newRoom.GetTile (new Vector2(4, 0));
-		transform.position = tile.transform.position;
-		transform.SetParent (tile.transform);
-		coord = new Vector2 (4, 0);
 	}
 }
