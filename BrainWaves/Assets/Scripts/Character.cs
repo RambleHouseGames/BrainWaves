@@ -33,6 +33,8 @@ public abstract class Character : MonoBehaviour {
 
 	protected void onProgressChanged()
 	{
+		StopAllCoroutines();
+		MovementAnimation.EndAllAnimations();
 		Room newRoom = myCollumn.GetCurrentRoom ();
 		TileBase tile = newRoom.GetTile (new Vector2(4, 0));
 		transform.position = tile.transform.position;
