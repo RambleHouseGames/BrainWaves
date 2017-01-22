@@ -153,10 +153,12 @@ public class Room : MonoBehaviour
 					if (tileSprite.type == childTile.GetTileType ()) {
 						SpriteRenderer renderer = childTile.GetComponent<SpriteRenderer> ();
 						Debug.Log ("Fixing: " + childTile.gameObject.name);
-						renderer.sprite = tileSprite.sprite;
-						TextMesh text = renderer.gameObject.GetComponentInChildren<TextMesh> ();
-						if (text != null)
-							GameObject.Destroy (text.gameObject);
+						if (renderer != null) {
+							renderer.sprite = tileSprite.sprite;
+							TextMesh text = renderer.gameObject.GetComponentInChildren<TextMesh> ();
+							if (text != null)
+								GameObject.Destroy (text.gameObject);
+						}
 					} else
 						Debug.Log ("type: " + childTile.GetTileType ());
 				}
