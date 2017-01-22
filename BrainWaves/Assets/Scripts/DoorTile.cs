@@ -17,4 +17,9 @@ public class DoorTile : TileBase
 	public void Toggle() {
 		open = !open;
 	}
+
+	public void SetOpen(bool value)
+	{
+		open = value;
+	}
 }
