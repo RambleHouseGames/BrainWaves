@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class DoorTile : TileBase
 {
+	[SerializeField]
 	private bool open = false;
 
 	public override TileType GetTileType ()
@@ -21,5 +22,8 @@ public class DoorTile : TileBase
 	public void SetOpen(bool value)
 	{
 		open = value;
+	}
+	public override void resetRoom(){
+		open = false;
 	}
 }

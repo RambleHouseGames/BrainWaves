@@ -48,6 +48,22 @@ public class Room : MonoBehaviour
 			}
 		}
 	}
+	public void restartRoom(){
+		foreach (RoomTile tileLocator in tileLocators) {
+			if (tileLocator.tile != null) {
+				foreach (Transform child in tileLocator.tile.transform) {
+					TileBase b = child.gameObject.GetComponentInChildren<TileBase> () as TileBase;
+					if (b != null)
+						b.resetRoom ();
+				}
+				Rock rock = GetRock (tileLocator.coord); if (rock != null) rock.resetRoom ();
+				GameData.Instance.mainCol.character.resetRoom ();
+				GameData.Instance.flipCol.character.resetRoom ();
+				GameData.Instance.lazyCol.character.resetRoom ();
+				GameData.Instance.crazyCol.character.resetRoom ();
+			}
+		}
+	}
 
 	public TileBase GetTile(Vector2 coord)
 	{
@@ -64,6 +80,19 @@ public class Room : MonoBehaviour
 		}
 		//Debug.Log ("" + gameObject.name + "Returning Null for coord: " + coord);
 		return null;
+	}
+
+	public Rock GetRock(Vector2 coord) {
+		TileBase tile = GetTile (coord);
+		if (tile == null)
+			return null;
+
+		var testPos = tile.transform.position;
+		var hit = Physics2D.OverlapPoint (testPos, LayerMask.GetMask ("Rock"));
+		if (hit == null)
+			return null;
+		else
+			return hit.GetComponent<Rock>();
 	}
 
 	private GameObject GetTilePrefab(int CSVCode)
@@ -87,11 +116,11 @@ public class Room : MonoBehaviour
 		GameObject newGO = GameObject.Instantiate (GetTilePrefab(value), locator.transform.position, Quaternion.identity, locator);
 		newGO.transform.localScale = Vector3.one;
 
-		if (value == 5) {
-			// Rock
-			var rock = GameObject.Instantiate (GameData.Instance.rockPrefab, locator.transform.position, Quaternion.identity, locator);
-			rock.transform.localScale = Vector3.one;
-		}
+		//if (value == 5) {
+		//	// Rock
+		//	var rock = GameObject.Instantiate (GameData.Instance.rockPrefab, locator.transform.position, Quaternion.identity, locator);
+		//	rock.transform.localScale = Vector3.one;
+		//}
 	}
 }
 

@@ -8,4 +8,5 @@ public class EmptyTile : TileBase
 	{
 		return TileType.EMPTY;
 	}
+	public override void resetRoom(){}
 }

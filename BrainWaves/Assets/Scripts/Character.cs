@@ -21,89 +21,93 @@ public abstract class Character : MonoBehaviour {
 			transform.position = destinationTile.transform.position;
 		}
 	}
+	public void resetRoom(){
+		coord.x = 4; coord.y = 0;
+		TileBase destinationTile = myCollumn.GetCurrentRoom().GetTile(coord);
+		transform.position = destinationTile.transform.position;
+		transform.SetParent (destinationTile.transform);
+	}
 
 	// Get the destination for a move.
 	virtual protected Vector2 GetDestination (Move myMove)	{
-		Vector2 dest;
-		switch (myMove) {
-		case Move.UP:
-			dest = coord + new Vector2 (0, 1);
-			break;
-		case Move.DOWN:
-			dest = coord + new Vector2 (0, -1);
-			break;
-		case Move.LEFT:
-			dest = coord + new Vector2 (-1, 0);
-			break;
-		case Move.RIGHT:
-			dest = coord + new Vector2 (1, 0);
-			break;
-		default:
-			throw new System.ArgumentOutOfRangeException ();
-		}
-		return dest;
+		return MoveBy (coord, myMove, 1f);
 	}
 
 	// Translate the last person's move into my move.
 	abstract protected Move InterpretMove (Move yourMove);
 
 	// Send my move to the next person.
-	protected void SendMove(Move myMove) {
+	protected bool SendMove(Move myMove) {
 		var roomCol = GameData.Instance.GetNextRoomCollumn (myType);
 		if (roomCol == null || roomCol.character == null)
-			return;
-		roomCol.character.TryMove (myMove);
+			return true;
+		return roomCol.character.TryMove (myMove);
 	}
 
 	// Receive a move from the last person (or user input) and execute it.
-	protected void TryMove(Move yourMove) {
+	protected bool TryMove(Move yourMove) {
 		Move myMove = InterpretMove (yourMove);
-		SendMove (myMove);
 
 		if (myMove == Move.NONE)
-			return;
+			return true;
 
 		Vector2 destination = GetDestination (myMove);
 
-		//Check For Vicory Door
-		if (destination == new Vector2 (4, 20))
-			GameData.Instance.ReportExitDoor (GetRoomType ());
-			
-
-		TileBase destinationTile = myCollumn.GetCurrentRoom().GetTile(destination);
+		Room room = myCollumn.GetCurrentRoom ();
+		TileBase destinationTile = room.GetTile(destination);
+		TileBase leavingTile = room.GetTile (coord);
 		if (destinationTile == null)
-			return;
+			return SendMove (myMove);
 		
 		TileType tileType = destinationTile.GetTileType ();
+		TileType leavingTileType = leavingTile.GetTileType ();
+
+		if (tileType == TileType.DEATH) {
+			GameData.Instance.onDeath(false); return false;
+		}
+		if (!SendMove (myMove))
+			return false;
 
 		// Blocking tiles.
 		if (tileType == TileType.WALL
 			|| tileType == TileType.DOOR)
-			return;
+			return true;
 
 		// Special blocking tile.
 		if (tileType == TileType.LEVER) {
-			Debug.Log ("Trigger Lever");
-			(destinationTile as LeverTile).Trigger ();
-			return;
+			if (myMove == Move.UP) {
+				Debug.Log ("Trigger Lever");
+				GameData.Instance.RegisterStateChange((destinationTile as LeverTile).Trigger);
+			} return true;
 		}
 
-		// if tile contains boulder
-		// -if can push it
-		// --push it
-		// -if can't push it
-		// --cancel move
+		// Push rock?
+		Rock rock = room.GetRock (destination);
+		if (rock != null) {
+			//Debug.Log ("found a rock!");
+			bool canPush = TryPushRock (rock, room, destination, myMove);
+			if (!canPush)
+				return true;
+		}
 
+		// Move player.
 		transform.position = destinationTile.transform.position;
 		transform.SetParent (destinationTile.transform);
 		coord = destination;
 
-		// Special tiles.
+		// Buttons
 		if (tileType == TileType.BUTTON) {
-			// TODO: trigger button
-		} else if (tileType == TileType.DEATH) {
-			// TODO: trigger death
+			GameData.Instance.RegisterStateChange((destinationTile as ButtonTile).PlayerOn);
 		}
+		if (leavingTileType == TileType.BUTTON) {
+			GameData.Instance.RegisterStateChange((leavingTile as ButtonTile).PlayerOff);
+		}
+
+		// Check For Victory Door
+		if (GetRoomType () == RoomType.MAIN)
+		if (destination == new Vector2 (4, 20)) {
+			GameData.Instance.ReportExitDoor (GetRoomType ());
+		} return true;
 	}
 
 	// Returns all non-null tiles adjacent to the given position.
@@ -116,5 +120,49 @@ public abstract class Character : MonoBehaviour {
 		};
 		result.RemoveAll(t => t == null);
 		return result;
+	}
+
+	public bool TryPushRock(Rock rock, Room room, Vector2 destination, Move move) {
+		Vector3 pushTo = MoveBy (destination, move, 1f);
+		TileBase pushToTile = room.GetTile (pushTo);
+		if (pushToTile == null)
+			return false;
+
+		TileType tileType = pushToTile.GetTileType ();
+		if (tileType == TileType.WALL
+		    || tileType == TileType.LEVER
+		    || tileType == TileType.DEATH)
+			return false;
+
+		if (room.GetRock (pushTo) != null)
+			return false;
+
+		TileBase pushFromTile = room.GetTile (destination);
+		rock.Push (room, pushToTile, pushFromTile);
+		return true;
+	}
+
+	public static Vector2 MoveBy(Vector2 initial, Move moveDirection, float tiles) {
+		Vector2 dest;
+		switch (moveDirection) {
+		case Move.UP:
+			dest = initial + tiles * Vector2.up;
+			break;
+		case Move.DOWN:
+			dest = initial + tiles * Vector2.down;
+			break;
+		case Move.LEFT:
+			dest = initial + tiles * Vector2.left;
+			break;
+		case Move.RIGHT:
+			dest = initial + tiles * Vector2.right;
+			break;
+		case Move.NONE:
+			dest = initial;
+			break;
+		default:
+			throw new System.ArgumentOutOfRangeException ();
+		}
+		return dest;
 	}
 }
