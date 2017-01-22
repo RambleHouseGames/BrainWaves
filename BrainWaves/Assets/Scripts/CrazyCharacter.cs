@@ -20,12 +20,29 @@ public class CrazyCharacter : Character {
 		return RoomType.CRAZY;
 	}
 
-	override protected Move InterpretMove (Move yourMove) {
-		return yourMove;
-	}
-		
-	protected override bool TryMove(Move yourMove, int tiles) {
-		return base.TryMove(yourMove, tiles*2);
+	override protected void TryLegalMove(Move myMove, out TileBase entering, out TileBase bumpingInto) {
+		entering = null;
+		bumpingInto = null;
+
+		// Tile 2 spaces away.
+		var tile2 = myCollumn.GetCurrentRoom ().GetTile (MoveBy (coord, myMove, 2));
+		// Tile 1 space away.
+		var tile1 = myCollumn.GetCurrentRoom ().GetTile (MoveBy (coord, myMove, 1));
+
+		if (tile2 == null && tile1 == null) {
+			// Both null, so entering and bumping are null.
+			return;
+		} else if (tile2 != null && tile2.GetTileType ().IsWalkable ()) {
+			// Can enter tile2, so no bumping.
+			entering = tile2;
+		} else if (tile1 != null && tile1.GetTileType ().IsWalkable ()) {
+			// Can enter tile1 but not tile2, so bump tile2.
+			entering = tile1;
+			bumpingInto = tile2;
+		} else {
+			// Can't enter tile1, so bump it.
+			bumpingInto = tile1;
+		}
 	}
 
 	private void onProgressChanged()

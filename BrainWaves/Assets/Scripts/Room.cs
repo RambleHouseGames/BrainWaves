@@ -53,10 +53,13 @@ public class Room : MonoBehaviour
 			if (tileLocator.tile != null) {
 				foreach (Transform child in tileLocator.tile.transform) {
 					TileBase b = child.gameObject.GetComponentInChildren<TileBase> () as TileBase;
-					if (b != null)
+					if (b != null) {
 						b.resetRoom ();
+						Rock rock = GetRock (b);
+						if (rock != null)
+							rock.resetRoom ();
+					}
 				}
-				Rock rock = GetRock (tileLocator.coord); if (rock != null) rock.resetRoom ();
 				GameData.Instance.mainCol.character.resetRoom ();
 				GameData.Instance.flipCol.character.resetRoom ();
 				GameData.Instance.lazyCol.character.resetRoom ();
@@ -69,21 +72,29 @@ public class Room : MonoBehaviour
 	{
 		foreach (RoomTile tileLocator in tileLocators) {
 			if (tileLocator.coord == coord) {
-				TileBase tile = null;
 				Debug.Assert (tileLocator.tile != null, "no tile in locator: " + coord);
 				foreach (Transform child in tileLocator.tile.transform) {
 					TileBase returnValue = child.gameObject.GetComponentInChildren<TileBase> () as TileBase;
 					if (returnValue != null)
 						return returnValue;
 				}
+				//return null;
 			}
 		}
 		//Debug.Log ("" + gameObject.name + "Returning Null for coord: " + coord);
 		return null;
 	}
 
-	public Rock GetRock(Vector2 coord) {
-		TileBase tile = GetTile (coord);
+	public Vector2 GetCoord(TileBase tile) {
+		foreach (RoomTile tileLocator in tileLocators) {
+			if (tileLocator.tile == tile.transform.parent.gameObject) {
+				return tileLocator.coord;
+			}
+		}
+		throw new ArgumentException ("That tile does not belong in this room: can't get it's coord.");
+	}
+
+	public Rock GetRock(TileBase tile) {
 		if (tile == null)
 			return null;
 

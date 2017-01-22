@@ -9,3 +9,26 @@ public abstract class TileBase : MonoBehaviour
 }
 
 public enum TileType {EMPTY, WALL, BUTTON, LEVER, DOOR, DEATH}
+
+public static class TileTypeExtension {
+
+	public static bool IsWalkable(this TileType tileType) {
+		switch (tileType) {
+			case TileType.WALL:
+			case TileType.LEVER:
+			case TileType.DOOR:
+				return false;
+			case TileType.EMPTY:
+			case TileType.BUTTON:
+			case TileType.DEATH:
+				return true;
+			default:
+				throw new System.ArgumentOutOfRangeException ();
+		}
+	}
+
+	public static bool TypeEquals(this TileType tileType, TileBase that) {
+		return that != null && that.GetTileType() == tileType;
+	}
+}
+	

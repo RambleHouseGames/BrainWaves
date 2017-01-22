@@ -20,10 +20,6 @@ public class MainCharacter : Character
 		return RoomType.MAIN;
 	}
 
-	override protected Move InterpretMove (Move yourMove) {
-		return yourMove;
-	}
-
 	void Update()
 	{
 //		if (GameData.Instance.GetCurrentGameState () != GameState.PLAYING)

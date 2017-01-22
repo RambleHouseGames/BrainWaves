@@ -28,13 +28,10 @@ public abstract class Character : MonoBehaviour {
 		transform.SetParent (destinationTile.transform);
 	}
 
-	// Get the destination for a move.
-	virtual protected Vector2 GetDestination (Move myMove, int tiles)	{
-		return MoveBy (coord, myMove, tiles);
-	}
-
 	// Translate the last person's move into my move.
-	abstract protected Move InterpretMove (Move yourMove);
+	virtual protected Move InterpretMove (Move yourMove) {
+		return yourMove;
+	}
 
 	// Send my move to the next person.
 	protected bool SendMove(Move myMove, int tiles) {
@@ -44,81 +41,86 @@ public abstract class Character : MonoBehaviour {
 		return roomCol.character.TryMove (myMove, tiles);
 	}
 
+	virtual protected void TryLegalMove(Move myMove, out TileBase entering, out TileBase bumpingInto) {
+		entering = null;
+		bumpingInto = null;
+
+		var tile = myCollumn.GetCurrentRoom ().GetTile (MoveBy (coord, myMove, 1));
+
+		if (tile == null) {
+			return;
+		} else if (tile.GetTileType ().IsWalkable ()) {
+			entering = tile;
+		} else {
+			bumpingInto = tile;
+		}
+	}
+
 	// Receive a move from the last person (or user input) and execute it.
 	virtual protected bool TryMove(Move yourMove, int tiles) {
+		//Debug.Log ("Trying move " + myType + " " + tiles);
+
 		Move myMove = InterpretMove (yourMove);
 
 		if (myMove == Move.NONE)
 			return true;
-		Room room = myCollumn.GetCurrentRoom (); TileBase leavingTile = room.GetTile (coord);
-		Vector2 destination = Vector2.one; TileBase destinationTile = null; TileType tileType = TileType.EMPTY;
-		for (int i = 1; i <= tiles; i++) {
-			destination = GetDestination (myMove, i);
-		
-			TileBase tile = room.GetTile(destination);
-			if (tile == null)
-				break;
-			destinationTile = tile;
-			tileType = destinationTile.GetTileType ();
-			if (tileType == TileType.WALL || tileType == TileType.LEVER || tileType == TileType.DOOR) {
-				if (i != 1){
-					destination = GetDestination (myMove, i-1);
-					destinationTile = room.GetTile (destination);
-					tileType = destinationTile.GetTileType ();
-				} break;
-			}
-		}
-		if (destinationTile == null)
-			return SendMove (myMove, tiles);
 
-		TileType leavingTileType = leavingTile.GetTileType ();
+		TileBase entering;
+		TileBase bumpingInto;
+		TryLegalMove (myMove, out entering, out bumpingInto);
 
-		if (tileType == TileType.DEATH) {
-			GameData.Instance.onDeath(false); return false;
-		}
-		if (!SendMove (myMove, tiles))
+		TileBase leaving = (entering != null) ? myCollumn.GetCurrentRoom().GetTile(coord) : null;
+
+		// Quit if we've died.
+		if (TileType.DEATH.TypeEquals(entering)) {
+			GameData.Instance.onDeath(false);
 			return false;
+		}
 
-		// Blocking tiles.
-		if (tileType == TileType.WALL
-			|| tileType == TileType.DOOR)
-			return true;
+		// Not dead: send moves, but quit if anyone else dies.
+		if (SendMove (myMove, 1) == false) {
+			return false;
+		}
 
 		// Special blocking tile.
-		if (tileType == TileType.LEVER) {
-			if (myMove == Move.UP) {
-				Debug.Log ("Trigger Lever");
-				GameData.Instance.RegisterStateChange((destinationTile as LeverTile).Trigger);
-			} return true;
+		if (TileType.LEVER.TypeEquals(bumpingInto) && myMove == Move.UP) {
+			Debug.Log ("Trigger Lever");
+			GameData.Instance.RegisterStateChange((bumpingInto as LeverTile).Trigger);
+			return true;
 		}
 
-		// Push rock? Does not work for crazy character
-		Rock rock = room.GetRock (destination);
-		if (rock != null) {
-			//Debug.Log ("found a rock!");
-			bool canPush = TryPushRock (rock, room, destination, myMove);
-			if (!canPush)
-				return true;
-		}
+		if (entering != null) {
+			// Push rock?
+			Rock rock = myCollumn.GetCurrentRoom ().GetRock (entering);
+			if (rock != null) {
+				//Debug.Log ("found a rock!");
+				bool canPush = TryPushRock (rock, myCollumn.GetCurrentRoom(), entering, myMove);
+				if (!canPush)
+					return true;
+			}
 
-		// Move player.
-		transform.position = destinationTile.transform.position;
-		transform.SetParent (destinationTile.transform);
-		coord = destination;
+			// Move player.
+			transform.position = entering.transform.position;
+			transform.SetParent (entering.transform);
+			coord = myCollumn.GetCurrentRoom().GetCoord(entering);
+		}
 
 		// Buttons
-		if (tileType == TileType.BUTTON) {
-			GameData.Instance.RegisterStateChange((destinationTile as ButtonTile).PlayerOn);
+		if (TileType.BUTTON.TypeEquals(entering)) {
+			GameData.Instance.RegisterStateChange((entering as ButtonTile).PlayerOn);
 		}
-		if (leavingTileType == TileType.BUTTON) {
-			GameData.Instance.RegisterStateChange((leavingTile as ButtonTile).PlayerOff);
+		if (TileType.BUTTON.TypeEquals(leaving)) {
+			GameData.Instance.RegisterStateChange((leaving as ButtonTile).PlayerOff);
 		}
 
 		// Check For Victory Door
 		if (isVictory()) {
 			GameData.Instance.checkVictory();
-		} return true;
+		}
+
+		return true;
 	}
+
 	public bool isVictory(){
 		return coord == new Vector2 (4, 20);
 	}
@@ -135,22 +137,25 @@ public abstract class Character : MonoBehaviour {
 		return result;
 	}
 
-	public bool TryPushRock(Rock rock, Room room, Vector2 destination, Move move) {
-		Vector3 pushTo = MoveBy (destination, move, 1f);
+	public bool TryPushRock(Rock rock, Room room, TileBase pushFromTile, Move move) {
+		Vector2 pushFrom = room.GetCoord (pushFromTile);
+		Vector2 pushTo = MoveBy (pushFrom, move, 1f);
 		TileBase pushToTile = room.GetTile (pushTo);
+
 		if (pushToTile == null)
 			return false;
 
 		TileType tileType = pushToTile.GetTileType ();
 		if (tileType == TileType.WALL
+			|| tileType == TileType.DOOR
 		    || tileType == TileType.LEVER
 		    || tileType == TileType.DEATH)
 			return false;
 
-		if (room.GetRock (pushTo) != null)
+		// Can't push if there's another rock there.
+		if (room.GetRock (pushToTile) != null)
 			return false;
 
-		TileBase pushFromTile = room.GetTile (destination);
 		rock.Push (room, pushToTile, pushFromTile);
 		return true;
 	}
