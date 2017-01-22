@@ -19,7 +19,7 @@ public class CrazyCharacter : Character {
 		return RoomType.CRAZY;
 	}
 
-	override protected bool TryMove(Move yourMove, int tiles) {
-		return base.TryMove(yourMove, tiles * 2);
+	override protected bool TryMove(Move yourMove, int tiles = 1, float delay = 0f) {
+		return base.TryMove(yourMove, tiles * 2, delay);
 	}
 }
