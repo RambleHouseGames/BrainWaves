@@ -55,6 +55,7 @@ public class MainCharacter : Character
 	}
 
 	private void AnimationComplete() {
+		Debug.Log("State change");
 		GameData.Instance.ExecuteStateChanges();
 	}
 }

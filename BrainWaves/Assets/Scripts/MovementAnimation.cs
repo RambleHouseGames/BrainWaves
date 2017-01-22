@@ -14,6 +14,7 @@ public static class MovementAnimation {
 
 	public static void EndAnimation() {
 		animating -= 1;
+		if (animating == 0) DoneAnimating();
 	}
 
 	public static bool Animating {
