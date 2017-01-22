@@ -29,14 +29,25 @@ public class MainCharacter : Character
 //		if (GameData.Instance.GetCurrentGameState () != GameState.PLAYING)
 //			return;
 
+		// First phase: move characters and register state changes.
+		bool moveAttempted = false;
 		if (Input.GetKeyDown (KeyCode.UpArrow)) {
+			moveAttempted = true;
 			TryMove (Move.UP);
 		} else if (Input.GetKeyDown (KeyCode.DownArrow)) {
+			moveAttempted = true;
 			TryMove (Move.DOWN);
 		} else if (Input.GetKeyDown (KeyCode.LeftArrow)) {
+			moveAttempted = true;
 			TryMove (Move.LEFT);
 		} else if (Input.GetKeyDown (KeyCode.RightArrow)) {
+			moveAttempted = true;
 			TryMove (Move.RIGHT);
+		}
+
+		// Second phase: resolve state changes.
+		if (moveAttempted) {
+			GameData.Instance.ExecuteStateChanges ();
 		}
 	}
 

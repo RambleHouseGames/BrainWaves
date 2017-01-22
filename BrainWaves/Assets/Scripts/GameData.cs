@@ -24,6 +24,8 @@ public class GameData : MonoBehaviour
 	private List<RoomType> victoryReports;
 	private List<RoomType> advanceCompleteReports;
 
+	private List<Action> stateChangeQueue = new List<Action>();
+
 	[Header("Collumns")]
 	public RoomCollumn mainCol;
 	public RoomCollumn flipCol;
@@ -139,6 +141,16 @@ public class GameData : MonoBehaviour
 		}
 		Debug.Assert (false, "No Puzzle Requirements found for progressNumber: " + progressNumber);
 		return null;
+	}
+
+	// State change queue
+	public void RegisterStateChange(Action action) {
+		stateChangeQueue.Add (action);
+	}
+	public void ExecuteStateChanges() {
+		//Debug.Log ("executing state changes: " + stateChangeQueue.Count);
+		stateChangeQueue.ForEach (x => x());
+		stateChangeQueue.Clear ();
 	}
 }
 

@@ -65,7 +65,7 @@ public abstract class Character : MonoBehaviour {
 		// Special blocking tile.
 		if (tileType == TileType.LEVER) {
 			Debug.Log ("Trigger Lever");
-			(destinationTile as LeverTile).Trigger ();
+			GameData.Instance.RegisterStateChange((destinationTile as LeverTile).Trigger);
 			return;
 		}
 
@@ -85,10 +85,10 @@ public abstract class Character : MonoBehaviour {
 
 		// Buttons
 		if (tileType == TileType.BUTTON) {
-			(destinationTile as ButtonTile).PlayerOn ();
+			GameData.Instance.RegisterStateChange((destinationTile as ButtonTile).PlayerOn);
 		}
 		if (leavingTileType == TileType.BUTTON) {
-			(leavingTile as ButtonTile).PlayerOff ();
+			GameData.Instance.RegisterStateChange((leavingTile as ButtonTile).PlayerOff);
 		}
 
 		if (tileType == TileType.DEATH) {
