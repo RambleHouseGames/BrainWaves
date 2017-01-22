@@ -48,6 +48,22 @@ public class Room : MonoBehaviour
 			}
 		}
 	}
+	public void restartRoom(){
+		foreach (RoomTile tileLocator in tileLocators) {
+			if (tileLocator.tile != null) {
+				foreach (Transform child in tileLocator.tile.transform) {
+					TileBase b = child.gameObject.GetComponentInChildren<TileBase> () as TileBase;
+					if (b != null)
+						b.resetRoom ();
+				}
+				Rock rock = GetRock (tileLocator.coord); if (rock != null) rock.resetRoom ();
+				GameData.Instance.mainCol.character.resetRoom ();
+				GameData.Instance.flipCol.character.resetRoom ();
+				GameData.Instance.lazyCol.character.resetRoom ();
+				GameData.Instance.crazyCol.character.resetRoom ();
+			}
+		}
+	}
 
 	public TileBase GetTile(Vector2 coord)
 	{

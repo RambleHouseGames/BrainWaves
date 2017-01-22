@@ -8,4 +8,5 @@ public class DeathTile : TileBase
 	{
 		return TileType.DEATH;
 	}
+	public override void resetRoom(){}
 }

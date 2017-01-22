@@ -37,6 +37,13 @@ public class GameData : MonoBehaviour
 		Instance = this;
 	}
 
+	public void onDeath(bool keyPress){
+		// TODO: trigger death
+		mainCol.GetCurrentRoom().restartRoom();
+		flipCol.GetCurrentRoom().restartRoom();
+		lazyCol.GetCurrentRoom().restartRoom();
+		crazyCol.GetCurrentRoom().restartRoom();
+	}
 	public void AddProgressCallback(Action callback)
 	{
 		if (progressCallback == null)

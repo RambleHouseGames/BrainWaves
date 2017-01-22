@@ -8,4 +8,5 @@ public class WallTile : TileBase
 	{
 		return TileType.WALL;
 	}
+	public override void resetRoom(){}
 }

@@ -15,4 +15,5 @@ public class LeverTile : TileBase
 		if (opens != null)
 			opens.Toggle ();
 	}
+	public override void resetRoom(){}
 }

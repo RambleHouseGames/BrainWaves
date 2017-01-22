@@ -23,4 +23,7 @@ public class DoorTile : TileBase
 	{
 		open = value;
 	}
+	public override void resetRoom(){
+		open = false;
+	}
 }

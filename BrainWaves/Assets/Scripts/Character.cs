@@ -21,6 +21,12 @@ public abstract class Character : MonoBehaviour {
 			transform.position = destinationTile.transform.position;
 		}
 	}
+	public void resetRoom(){
+		coord.x = 4; coord.y = 0;
+		TileBase destinationTile = myCollumn.GetCurrentRoom().GetTile(coord);
+		transform.position = destinationTile.transform.position;
+		transform.SetParent (destinationTile.transform);
+	}
 
 	// Get the destination for a move.
 	virtual protected Vector2 GetDestination (Move myMove)	{
@@ -31,20 +37,19 @@ public abstract class Character : MonoBehaviour {
 	abstract protected Move InterpretMove (Move yourMove);
 
 	// Send my move to the next person.
-	protected void SendMove(Move myMove) {
+	protected bool SendMove(Move myMove) {
 		var roomCol = GameData.Instance.GetNextRoomCollumn (myType);
 		if (roomCol == null || roomCol.character == null)
-			return;
-		roomCol.character.TryMove (myMove);
+			return true;
+		return roomCol.character.TryMove (myMove);
 	}
 
 	// Receive a move from the last person (or user input) and execute it.
-	protected void TryMove(Move yourMove) {
+	protected bool TryMove(Move yourMove) {
 		Move myMove = InterpretMove (yourMove);
-		SendMove (myMove);
 
 		if (myMove == Move.NONE)
-			return;
+			return true;
 
 		Vector2 destination = GetDestination (myMove);
 
@@ -52,21 +57,28 @@ public abstract class Character : MonoBehaviour {
 		TileBase destinationTile = room.GetTile(destination);
 		TileBase leavingTile = room.GetTile (coord);
 		if (destinationTile == null)
-			return;
+			return SendMove (myMove);
 		
 		TileType tileType = destinationTile.GetTileType ();
 		TileType leavingTileType = leavingTile.GetTileType ();
 
+		if (tileType == TileType.DEATH) {
+			GameData.Instance.onDeath(false); return false;
+		}
+		if (!SendMove (myMove))
+			return false;
+
 		// Blocking tiles.
 		if (tileType == TileType.WALL
 			|| tileType == TileType.DOOR)
-			return;
+			return true;
 
 		// Special blocking tile.
 		if (tileType == TileType.LEVER) {
-			Debug.Log ("Trigger Lever");
-			(destinationTile as LeverTile).Trigger ();
-			return;
+			if (myMove == Move.UP) {
+				Debug.Log ("Trigger Lever");
+				(destinationTile as LeverTile).Trigger ();
+			} return true;
 		}
 
 		// Push rock?
@@ -75,7 +87,7 @@ public abstract class Character : MonoBehaviour {
 			//Debug.Log ("found a rock!");
 			bool canPush = TryPushRock (rock, room, destination, myMove);
 			if (!canPush)
-				return;
+				return true;
 		}
 
 		// Move player.
@@ -91,14 +103,10 @@ public abstract class Character : MonoBehaviour {
 			(leavingTile as ButtonTile).PlayerOff ();
 		}
 
-		if (tileType == TileType.DEATH) {
-			// TODO: trigger death
-		}
-
 		// Check For Victory Door
 		if (destination == new Vector2 (4, 20)) {
 			GameData.Instance.ReportExitDoor (GetRoomType ());
-		}
+		} return true;
 	}
 
 	// Returns all non-null tiles adjacent to the given position.

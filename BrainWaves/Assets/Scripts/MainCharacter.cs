@@ -34,6 +34,10 @@ public class MainCharacter : Character
 			TryMove (Move.LEFT);
 		} else if (Input.GetKeyDown (KeyCode.RightArrow)) {
 			TryMove (Move.RIGHT);
+		} 
+
+		if (Input.GetKeyDown (KeyCode.R)) {
+			GameData.Instance.onDeath (true);
 		}
 	}
 
