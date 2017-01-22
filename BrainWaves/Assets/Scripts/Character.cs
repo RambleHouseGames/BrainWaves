@@ -61,9 +61,7 @@ public abstract class Character : MonoBehaviour {
 			destinationTile = tile;
 			tileType = destinationTile.GetTileType ();
 			if (tileType == TileType.WALL || tileType == TileType.LEVER || tileType == TileType.DOOR) {
-				if (i == 1)
-					destinationTile = null;
-				else {
+				if (i != 1){
 					destination = GetDestination (myMove, i-1);
 					destinationTile = room.GetTile (destination);
 					tileType = destinationTile.GetTileType ();
@@ -94,7 +92,7 @@ public abstract class Character : MonoBehaviour {
 			} return true;
 		}
 
-		// Push rock?
+		// Push rock? Does not work for crazy character
 		Rock rock = room.GetRock (destination);
 		if (rock != null) {
 			//Debug.Log ("found a rock!");
