@@ -31,6 +31,12 @@ public class GameData : MonoBehaviour
 	public RoomCollumn lazyCol;
 	public RoomCollumn crazyCol;
 
+	public RoomCollumn[] AllColumns {
+		get { 
+			return new [] {	mainCol, flipCol, lazyCol, crazyCol	};
+		}
+	}
+
 	[Header("Prefabs")]
 	public List<TilePrefab> tilePrefabs;
 

@@ -23,6 +23,17 @@ public class MainCharacter : Character
 		return RoomType.MAIN;
 	}
 
+	override protected void onProgressChanged() {
+		base.onProgressChanged();
+		MovementAnimation.EndAllAnimations();
+		foreach (var col in GameData.Instance.AllColumns) {
+			Room newRoom = col.GetCurrentRoom ();
+			if (newRoom.gameObject.activeInHierarchy) {
+				col.character.resetRoom();
+			}
+		}
+	}
+
 	void Update()
 	{
 		if (GameData.Instance.GetCurrentGameState () != GameState.PLAYING)

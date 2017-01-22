@@ -31,15 +31,9 @@ public abstract class Character : MonoBehaviour {
 		transform.SetParent (destinationTile.transform);
 	}
 
-	protected void onProgressChanged()
+	virtual protected void onProgressChanged()
 	{
 		StopAllCoroutines();
-		MovementAnimation.EndAllAnimations();
-		Room newRoom = myCollumn.GetCurrentRoom ();
-		TileBase tile = newRoom.GetTile (new Vector2(4, 0));
-		transform.position = tile.transform.position;
-		transform.SetParent (tile.transform);
-		coord = new Vector2 (4, 0);
 	}
 
 	// Translate the last person's move into my move.
@@ -50,7 +44,7 @@ public abstract class Character : MonoBehaviour {
 	// Send my move to the next person.
 	protected bool SendMove(Move myMove, int tiles, float delay) {
 		var roomCol = GameData.Instance.GetNextRoomCollumn (myType);
-		if (roomCol == null || roomCol.character == null) {
+		if (roomCol == null || roomCol.character == null || !roomCol.character.gameObject.activeInHierarchy) {
 			return true;
 		}
 		return roomCol.character.TryMove (myMove, tiles, delay + transmissionDelay);
