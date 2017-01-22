@@ -43,6 +43,7 @@ public class MovableRoom : MonoBehaviour
 					int nearestLocator = 1;
 					float minDist = Vector3.Distance(transform.position, locators[nearestLocator].transform.position);
 					//i = 1 means skip main room
+					Debug.Log(GameData.Instance.flipCol.GetCurrentRoom().enabled);
 					for (int i = 1; i < locators.Count; i++) {
 						float dist = Vector3.Distance (transform.position, locators [i].transform.position);
 						if (dist < minDist) {

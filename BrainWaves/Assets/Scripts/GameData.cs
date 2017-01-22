@@ -18,6 +18,14 @@ public class GameData : MonoBehaviour
 
 	[SerializeField]
 	private List<PuzzleRequirement> puzzleRequirements;
+	[SerializeField]
+	public Sprite rockSprite;
+	[SerializeField]
+	public Sprite levelOn;
+	[SerializeField]
+	public Sprite buttonDown;
+	[SerializeField]
+	public Sprite doorOpen;
 
 	private Action progressCallback;
 
