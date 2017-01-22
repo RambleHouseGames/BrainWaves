@@ -29,6 +29,8 @@ public class FlipCharacter : Character {
 				return Move.RIGHT;
 			case Move.RIGHT:
 				return Move.LEFT;
+			case Move.NONE:
+				return Move.NONE;
 			default:
 				throw new System.ArgumentOutOfRangeException ();
 		}
