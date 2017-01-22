@@ -26,6 +26,9 @@ public class MainCharacter : Character
 
 	void Update()
 	{
+		if (GameData.Instance.GetCurrentGameState () != GameState.PLAYING)
+			return;
+
 		if (Input.GetKeyDown (KeyCode.UpArrow)) {
 			TryMove (Move.UP);
 		} else if (Input.GetKeyDown (KeyCode.DownArrow)) {

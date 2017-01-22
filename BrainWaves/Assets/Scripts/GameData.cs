@@ -22,6 +22,7 @@ public class GameData : MonoBehaviour
 	private Action progressCallback;
 
 	private List<RoomType> victoryReports;
+	private List<RoomType> advanceCompleteReports;
 
 	[Header("Collumns")]
 	public RoomCollumn mainCol;
@@ -104,8 +105,12 @@ public class GameData : MonoBehaviour
 
 	public void NotifyProgressAnimationComplete(RoomType room)
 	{
-		if(currentGameState == GameState.ADVANCING)
-			Debug.Log ("" + room + " Room finished advancing");
+		Debug.Assert (currentGameState == GameState.ADVANCING, "Finished Advancing but not Advancing");
+		if (advanceCompleteReports == null)
+			advanceCompleteReports = new List<RoomType> ();
+		Debug.Assert (!advanceCompleteReports.Contains(room), "already finished: " + room);
+		advanceCompleteReports.Add (room);
+
 	}
 
 	public void ReportExitDoor(RoomType type)
@@ -121,6 +126,7 @@ public class GameData : MonoBehaviour
 				return;
 		}
 		progress++;
+		currentGameState = GameState.ADVANCING;
 		if (progressCallback != null)
 			progressCallback ();
 	}
