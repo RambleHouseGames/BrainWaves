@@ -21,7 +21,6 @@ public class GameData : MonoBehaviour
 
 	private Action progressCallback;
 
-	private List<RoomType> victoryReports;
 	private List<RoomType> advanceCompleteReports;
 
 	private List<Action> stateChangeQueue = new List<Action>();
@@ -121,18 +120,15 @@ public class GameData : MonoBehaviour
 
 	}
 
-	public void ReportExitDoor(RoomType type)
+	public void checkVictory()
 	{
-		if (victoryReports == null || victoryReports.Contains(type))
-			victoryReports = new List<RoomType> ();
-		
-		victoryReports.Add (type);
 
 		PuzzleRequirement requirement = getRequirement (progress);
-		foreach (RoomType room in requirement.rooms) {
-			if (!victoryReports.Contains (room))
-				return;
-		}
+		if (!mainCol.character.isVictory () && requirement.rooms.Contains (mainCol.character.GetRoomType ())) return;
+		if (!flipCol.character.isVictory () && requirement.rooms.Contains (flipCol.character.GetRoomType ())) return;
+		if (!lazyCol.character.isVictory () && requirement.rooms.Contains (lazyCol.character.GetRoomType ())) return;
+		if (!crazyCol.character.isVictory () && requirement.rooms.Contains (crazyCol.character.GetRoomType ())) return;
+
 		progress++;
 		//currentGameState = GameState.ADVANCING;
 		if (progressCallback != null)

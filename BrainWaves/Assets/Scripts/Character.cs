@@ -115,9 +115,12 @@ public abstract class Character : MonoBehaviour {
 		}
 
 		// Check For Victory Door
-		if (destination == new Vector2 (4, 20)) {
-			GameData.Instance.ReportExitDoor (GetRoomType ());
+		if (isVictory()) {
+			GameData.Instance.checkVictory();
 		} return true;
+	}
+	public bool isVictory(){
+		return coord == new Vector2 (4, 20);
 	}
 
 	// Returns all non-null tiles adjacent to the given position.
