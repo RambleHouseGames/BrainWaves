@@ -108,7 +108,7 @@ public class GameData : MonoBehaviour
 		Debug.Assert (currentGameState == GameState.ADVANCING, "Finished Advancing but not Advancing");
 		if (advanceCompleteReports == null)
 			advanceCompleteReports = new List<RoomType> ();
-		Debug.Assert (!advanceCompleteReports.Contains(room), "already finished: " + room);
+		//Debug.Assert (!advanceCompleteReports.Contains(room), "already finished: " + room);
 		advanceCompleteReports.Add (room);
 
 	}
@@ -126,7 +126,7 @@ public class GameData : MonoBehaviour
 				return;
 		}
 		progress++;
-		currentGameState = GameState.ADVANCING;
+		//currentGameState = GameState.ADVANCING;
 		if (progressCallback != null)
 			progressCallback ();
 	}

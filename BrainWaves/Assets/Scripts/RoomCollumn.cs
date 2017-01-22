@@ -28,7 +28,7 @@ public class RoomCollumn : MonoBehaviour {
 		float dist = Vector3.Distance(transform.position, target);
 		if (dist < minSpeed * Time.deltaTime) {
 			transform.position = target;
-			gameData.NotifyProgressAnimationComplete (myType);
+			//gameData.NotifyProgressAnimationComplete (myType);
 		} else
 			transform.position = Vector3.MoveTowards (transform.position, target, dist * Time.deltaTime * minSpeed);
 	}

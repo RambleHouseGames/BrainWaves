@@ -96,6 +96,7 @@ public abstract class Character : MonoBehaviour {
 		}
 
 		// Check For Victory Door
+		if (GetRoomType () == RoomType.MAIN)
 		if (destination == new Vector2 (4, 20)) {
 			GameData.Instance.ReportExitDoor (GetRoomType ());
 		}
