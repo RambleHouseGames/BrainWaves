@@ -43,15 +43,16 @@ public class MainCharacter : Character
 		} else if (Input.GetKeyDown (KeyCode.RightArrow)) {
 			moveAttempted = true;
 			TryMove (Move.RIGHT);
-		} 
-
-		if (Input.GetKeyDown (KeyCode.R)) {
-			GameData.Instance.onDeath (true);
 		}
 
 		// Second phase: resolve state changes.
 		if (moveAttempted) {
 			GameData.Instance.ExecuteStateChanges ();
+		}
+
+		// Reset Level Key
+		if (Input.GetKeyDown (KeyCode.R)) {
+			GameData.Instance.onDeath (true);
 		}
 	}
 
