@@ -15,7 +15,7 @@ public class Rock : MonoBehaviour {
 		transform.SetParent (startTile.transform);
 	}
 	
-	public void Push (Room room, TileBase pushToTile, TileBase pushFromTile) {
+	public void Push (Room room, TileBase pushToTile, TileBase pushFromTile, float delay) {
 		if (pushToTile.GetTileType() == TileType.BUTTON) {
 			GameData.Instance.RegisterStateChange((pushToTile as ButtonTile).RockOn);
 		}
@@ -23,7 +23,7 @@ public class Rock : MonoBehaviour {
 			GameData.Instance.RegisterStateChange((pushFromTile as ButtonTile).RockOff);
 		}
 
-		StartCoroutine(MovementAnimation.SlideTo(transform, pushToTile.transform.position));
+		StartCoroutine(MovementAnimation.SlideTo(transform, pushToTile.transform.position, delay));
 		transform.SetParent (pushToTile.transform);
 	}
 }

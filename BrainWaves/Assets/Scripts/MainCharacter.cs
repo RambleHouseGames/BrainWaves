@@ -46,7 +46,7 @@ public class MainCharacter : Character
 				return;
 			} else {
 				// Else execute move.
-				TryMove (move.Value, 1);
+				TryMove (move.Value);
 			}
 		}
 
@@ -59,7 +59,7 @@ public class MainCharacter : Character
 	private void AnimationComplete() {
 		GameData.Instance.ExecuteStateChanges();
 		if (queuedMove.HasValue) {
-			TryMove (queuedMove.Value, 1);
+			TryMove (queuedMove.Value);
 			queuedMove = null;
 		}
 	}
