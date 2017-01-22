@@ -5,6 +5,8 @@ using UnityEngine;
 public class MainCharacter : Character
 {
 
+	private Move? queuedMove = null;
+
 	void Awake()
 	{
 		InitPosition ();
@@ -26,27 +28,27 @@ public class MainCharacter : Character
 		if (GameData.Instance.GetCurrentGameState () != GameState.PLAYING)
 			return;
 
-		// While animating, don't accept user input.
-		if (MovementAnimation.Animating)
-			return;
-
-		// First phase: move characters and register state changes.
-		bool moveAttempted = false;
+		Move? move = null;
 		if (Input.GetKeyDown (KeyCode.UpArrow)) {
-			moveAttempted = true;
-			TryMove (Move.UP, 1);
+			move = Move.UP;
 		} else if (Input.GetKeyDown (KeyCode.DownArrow)) {
-			moveAttempted = true;
-			TryMove (Move.DOWN, 1);
+			move = Move.DOWN;
 		} else if (Input.GetKeyDown (KeyCode.LeftArrow)) {
-			moveAttempted = true;
-			TryMove (Move.LEFT, 1);
+			move = Move.LEFT;
 		} else if (Input.GetKeyDown (KeyCode.RightArrow)) {
-			moveAttempted = true;
-			TryMove (Move.RIGHT, 1);
+			move = Move.RIGHT;
 		}
 
-		// Second phase: resolve state changes will happen when animations complete.
+		if (move.HasValue) {
+			if (MovementAnimation.Animating) {
+				// While animating, queue move.
+				queuedMove = move;
+				return;
+			} else {
+				// Else execute move.
+				TryMove (move.Value, 1);
+			}
+		}
 
 		// Reset Level Key
 		if (Input.GetKeyDown (KeyCode.R)) {
@@ -55,7 +57,10 @@ public class MainCharacter : Character
 	}
 
 	private void AnimationComplete() {
-		Debug.Log("State change");
 		GameData.Instance.ExecuteStateChanges();
+		if (queuedMove.HasValue) {
+			TryMove (queuedMove.Value, 1);
+			queuedMove = null;
+		}
 	}
 }
